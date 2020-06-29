@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import Axios from 'axios'
 import './registerServiceWorker'
+import "./assets/less/public.less"
 
 // 引用全部mint UI
 import Mint from 'mint-ui';
