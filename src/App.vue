@@ -1,10 +1,14 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <router-view />
+    <div class="tabbar">
+      <div class="left">
+        
+      </div>
+      <div class="right">
+        <i class="iconfont icon-icontubiaozhizuomoban"></i>
+      </div>
     </div>
-    <router-view/>
   </div>
 </template>
 
