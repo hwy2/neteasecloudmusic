@@ -1,0 +1,343 @@
+.content {
+    width: 640px;
+    background-color: rgba(0, 0, 0, 0.6);
+    height: 100vh;
+    padding-top: 50px;
+    font-family: "Microsoft YaHei";
+    overflow-y: auto;
+    position: relative;
+
+    .upperPart {
+        width: 550px;
+        height: 220px;
+        background-color: #717171;
+        display: block;
+        margin: 0 auto;
+        border-radius: 18px 18px 0 0;
+
+        .vip {
+            height: 130px;
+
+            p:nth-of-type(1) {
+                padding: 24px 0 0 18px;
+                position: relative;
+
+                span {
+                    font-size: 28px;
+                    font-weight: bold;
+                    color: #ffeae6;
+                    font-family: "Microsoft YaHei";
+                    line-height: 1.8;
+                }
+
+                a {
+                    font-size: 17px;
+                    text-decoration: none;
+                    color: #574444;
+                    width: 96px;
+                    height: 38px;
+                    border: 1px solid #58504f;
+                    border-radius: 38px;
+                    text-align: center;
+                    line-height: 38px;
+                    background: linear-gradient(to right, #f9e6df, #e1bdbd);
+                    display: block;
+                    position: absolute;
+                    right: 16px;
+                    top: 40px;
+                }
+            }
+
+            p:nth-of-type(2) {
+                padding: 0 0 0 18px;
+
+                span {
+                    font-size: 16px;
+                    color: #cdcdcd;
+                    line-height: 1;
+                }
+            }
+        }
+
+        .discount {
+            height: 90px;
+            background-color: #6d6d6d;
+            padding: 14px 0 0 18px;
+            position: relative;
+            box-sizing: border-box;
+
+            p:nth-of-type(1) {
+                span {
+                    font-size: 20px;
+                    color: #f4e2e0;
+                    line-height: 1.2;
+                    font-weight: bold;
+                }
+            }
+
+            p:nth-of-type(2) {
+                span {
+                    font-size: 18px;
+                    color: #c6c6c6;
+                    line-height: 1.2;
+                }
+            }
+
+            a {
+                width: 64px;
+                height: 64px;
+                border-radius: 64px;
+                background-color: #fc7c3f;
+                text-decoration: none;
+                color: #fff;
+                display: block;
+                font-size: 15px;
+                padding-top: 10px;
+                text-align: center;
+                box-sizing: border-box;
+                line-height: 1.3;
+                position: absolute;
+                top: 13px;
+                right: 44px;
+            }
+
+            i.iconzuojiantou-cu {
+                font-size: 20px;
+                position: absolute;
+                top: 32px;
+                right: 14px;
+                color: #ababab;
+            }
+        }
+    }
+
+    .lowerPart {
+        width: 639px;
+        height: auto;
+        background-color: #fff;
+        border-radius: 20px 20px 0 0;
+        border-top: solid #494949 1px;
+        box-sizing: border-box;
+        padding: 34px 36px 72px;
+
+        .userProfile {
+            .top {
+                display: flex;
+                padding-bottom: 28px;
+
+                .left {
+                    flex: 7.5;
+
+                    img {
+                        width: 56px;
+                        height: 56px;
+                        vertical-align: middle;
+                    }
+
+                    span {
+                        font-size: 23px;
+                        color: #202020;
+                        vertical-align: middle;
+                        padding-left: 14px;
+                    }
+                }
+
+                .right {
+                    flex: 2.5;
+                    padding-top: 10px;
+
+                    a {
+                        text-decoration: none;
+                        color: #fff;
+                        width: 90px;
+                        height: 36px;
+                        border-radius: 36px;
+                        background-color: #f9412c;
+                        font-size: 18px;
+                        display: block;
+                        text-align: center;
+                        line-height: 36px;
+                        float: right;
+
+                        i {
+
+                            font-size: 17px;
+                            padding-right: 5px;
+                        }
+                    }
+                }
+            }
+
+            .bottomBar {
+                display: flex;
+                padding-bottom: 36px;
+                border-bottom: 2px solid #f2f2f2;
+
+                div {
+                    flex: 2;
+                    text-align: center;
+
+                    i {
+                        text-align: center;
+                        font-size: 40px;
+                        color: #de2134;
+                    }
+
+                    p {
+                        font-size: 20px;
+                        color: #333333;
+                    }
+                }
+            }
+        }
+
+        .creator {
+            border-bottom: 2px solid #f2f2f2;
+
+            div {
+                padding: 36px 0;
+
+                i {
+                    font-size: 36px;
+                    color: #1a1a1a;
+                    vertical-align: revert;
+                }
+
+                span {
+                    font-size: 25px;
+                    color: #0e0e0e;
+                    padding-left: 20px;
+                    user-select: none;
+                }
+            }
+        }
+
+        .listeningMusic {
+            border-bottom: 2px solid #f2f2f2;
+
+            ul {
+                padding: 36px 0 0;
+
+                li {
+                    display: flex;
+                    padding-bottom: 36px;
+
+                    .left {
+                        flex: 5;
+
+                        i {
+                            font-size: 36px;
+                            color: #0c0c0c;
+                            vertical-align: middle;
+                        }
+
+                        span {
+                            font-size: 25px;
+                            color: #0e0e0e;
+                            padding-left: 20px;
+                            vertical-align: middle;
+                            user-select: none;
+                        }
+                    }
+
+                    .right {
+                        flex: 5;
+
+                        p {
+                            text-align: right;
+                            font-size: 21px;
+                            line-height: 36px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .otherFunctions {
+            border-bottom: unset;
+        }
+
+    }
+
+    .barBotm {
+        height: 90px;
+        width: 639px;
+        background-color: #fff;
+        border-top: 1PX solid #f5f5f5;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        box-sizing: border-box;
+
+        div {
+            flex: 3;
+            text-align: center;
+            line-height: 60px;
+
+            span {
+                user-select: none;
+                font-size: 24px;
+                color: #141414;
+                padding-left: 18px;
+            }
+        }
+    }
+}
+
+.navbarWarp {
+    display: flex;
+    height: 90px;
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 1);
+
+    .drawer {
+        flex: 1;
+        padding-left: 42px;
+
+        i {
+            font-size: 38px;
+            display: block;
+            line-height: 90px;
+        }
+    }
+
+    .mint-navbar {
+        flex: 7;
+        line-height: 90px;
+
+        .mint-tab-item-label {
+            font-size: 28px;
+            line-height: 1.8;
+            font-family: "Microsoft YaHei";
+            color: #7f7f7f;
+        }
+
+        // .active {
+        //     .mint-tab-item-label {
+        //         font-size: 32px;
+        //         color: #000;
+        //         font-weight: bold;
+        //         line-height: 1.6;
+        //     }
+        // }
+    }
+
+    .search {
+        flex: 1;
+
+        padding-right: 42px;
+
+        i {
+            font-size: 38px;
+            display: block;
+            line-height: 90px;
+            text-align: right;
+        }
+    }
+}

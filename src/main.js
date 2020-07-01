@@ -17,7 +17,7 @@ import 'lib-flexible'
 // 配置Axios
 Vue.prototype.$axios = Axios
 //配置公共url
-Axios.defaults.baseURL = ''
+Axios.defaults.baseURL = 'http://3dcw.cn:5005'
 Axios.defaults.headers = {
   "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
 }
