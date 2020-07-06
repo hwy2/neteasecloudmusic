@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <!-- 左侧抽屉 -->
     <mt-popup v-model="popupVisible" position="left">
       <div class="content">
         <div class="upperPart">
@@ -221,6 +222,7 @@
       </div>
     </mt-popup>
 
+    <!-- 底部播放区 -->
     <div class="navbarWarp">
       <div class="drawer">
         <i class="iconfont icongengduo" @click="ListenDrawer()"></i>
@@ -284,8 +286,6 @@ export default {
       }
     }
   },
-  created() {
-    // this.$router.push({ name: "find" });
-  }
+  created() {}
 };
 </script>

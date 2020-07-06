@@ -1,7 +1,9 @@
 <template>
   <div class="find">
+
+    <!-- 顶部banner轮播 -->
     <div class="topSwipe">
-      <mt-swipe :auto="5000" :speed="800">
+      <mt-swipe :auto="3000" :speed="500">
         <mt-swipe-item v-for="item in swipeList " :key="item.bannerId">
           <img :src="item.pic" :alt="item.typeTitle" :bannerId="item.bannerId" />
           <span :style="{background:item.titleColor}">{{item.typeTitle}}</span>
@@ -9,6 +11,7 @@
       </mt-swipe>
     </div>
 
+    <!-- 二级导航栏 -->
     <div class="navigation">
       <ul class>
         <li @click="openDialog()">
@@ -68,6 +71,7 @@
       </ul>
     </div>
 
+    <!-- 人气歌单推荐 -->
     <div class="recommendation">
       <div class="topTile">
         <div class="left">
@@ -92,6 +96,7 @@
       </div>
     </div>
 
+    <!-- 新歌推荐 -->
     <div class="recommendation songNew">
       <div class="topTile">
         <div class="left">
@@ -112,6 +117,7 @@
       </div>
     </div>
 
+    <!-- 电台推荐 -->
     <div class="recommendation">
       <div class="topTile">
         <div class="left">
@@ -132,6 +138,7 @@
       </div>
     </div>
 
+    <!-- 每日推荐弹出层 -->
     <daily-recommendation @close="closeDialog" v-if="visible"></daily-recommendation>
   </div>
 </template>
@@ -159,11 +166,13 @@ export default {
   filters: {
     //拦截器
     retainDoubleDigit: function(data) {
+      // 讲数据转万
       return Math.floor(data / 10000);
     }
   },
   methods: {
     getpersonalized: function() {
+      // 获取人气歌单
       this.$axios
         .get("/personalized?limit=6")
         .then(res => {
@@ -178,6 +187,7 @@ export default {
         });
     },
     getnewsong: function() {
+      // 新歌推荐
       this.$axios
         .get("/personalized/newsong")
         .then(res => {
@@ -196,6 +206,7 @@ export default {
         });
     },
     getdjprogram: function() {
+      // 获取电台推荐
       this.$axios
         .get("/personalized/djprogram")
         .then(res => {
@@ -212,9 +223,10 @@ export default {
       // 根据localStorage的歌曲id,获取详细歌曲的信息
       let songId = songinfos.song.id;
       this.$store.commit("setsongInfo", JSON.stringify(songinfos));
-      this.getplayMusic(songId,songinfos);
+      this.getplayMusic(songId, songinfos);
     },
     openDialog: function() {
+      // dialog开关
       this.visible = true;
     },
     closeDialog: function() {

@@ -211,6 +211,7 @@ export default {
   },
   created() {
     let that = this;
+    // 暂停0.5s,等待loginStatus状态更新
     setTimeout(function() {
       // 判断是否需要弹出登录窗，弹出即禁止主页面滚动
       if (that.loginStatus) {
@@ -224,8 +225,8 @@ export default {
     }, 500);
   },
   beforeCreate() {
-    this.getLoginStatus();
-    this.$store.commit("setprofile", localStorage.getItem("profile"));
+    this.getLoginStatus();//获取登录态
+    this.$store.commit("setprofile", localStorage.getItem("profile"));//获取localStorage里的登录信息
   }
 };
 </script>
