@@ -3,7 +3,7 @@
     <div class="topSwipe">
       <mt-swipe :auto="5000" :speed="800">
         <mt-swipe-item v-for="item in swipeList " :key="item.bannerId">
-          <img v-lazy="item.pic" :alt="item.typeTitle" :bannerId="item.bannerId" />
+          <img :src="item.pic" :alt="item.typeTitle" :bannerId="item.bannerId" />
           <span :style="{background:item.titleColor}">{{item.typeTitle}}</span>
         </mt-swipe-item>
       </mt-swipe>
@@ -11,7 +11,7 @@
 
     <div class="navigation">
       <ul class>
-        <li>
+        <li @click="openDialog()">
           <div class>
             <i class="iconfont iconrili"></i>
           </div>
@@ -104,7 +104,7 @@
 
       <div class="concentration">
         <ul>
-          <li v-for="item in newsongList" :key="item.id" :newsong="item.id" >
+          <li v-for="item in newsongList" :key="item.id" @click="playMusic(item)">
             <img :src="item.picUrl" :alt="item.name" />
             <p>{{item.name}}</p>
           </li>
@@ -112,7 +112,7 @@
       </div>
     </div>
 
-    <div class="recommendation djprogram">
+    <div class="recommendation">
       <div class="topTile">
         <div class="left">
           <p>电台推荐</p>
@@ -124,29 +124,36 @@
 
       <div class="concentration">
         <ul>
-          <li v-for="item in djprogramList" :key="item.id" :djprogram="item.id" >
+          <li v-for="item in djprogramList" :key="item.id" :djprogram="item.id">
             <img :src="item.picUrl" :alt="item.name" />
             <p>{{item.name}}</p>
           </li>
         </ul>
       </div>
     </div>
+
+    <daily-recommendation @close="closeDialog" v-if="visible"></daily-recommendation>
   </div>
 </template>
 
 <script>
 import "../assets/less/find.less";
 import { Indicator } from "mint-ui";
+import DailyRecommendation from "../components/recommendation";
 
 export default {
   name: "find",
-  components: {},
+  components: {
+    DailyRecommendation
+  },
   data() {
     return {
       swipeList: [],
       personalizedList: [],
       newsongList: [],
-      djprogramList: []
+      djprogramList: [],
+      visible: false,
+      commodityId: 1
     };
   },
   filters: {
@@ -166,7 +173,7 @@ export default {
           this.getnewsong();
         })
         .catch(error => {
-          window.console.log("轮播图获取失败！/n" + error);
+          window.console.log("歌单推荐获取失败！/n" + error);
           Indicator.close();
         });
     },
@@ -176,11 +183,15 @@ export default {
         .then(res => {
           this.newsongList = res.data.result;
           // window.console.log("新歌推荐", JSON.stringify(res));
+          this.$store.commit(
+            "setsongInfo",
+            JSON.stringify(this.newsongList[0])
+          );
           Indicator.close();
           this.getdjprogram();
         })
         .catch(error => {
-          window.console.log("轮播图获取失败！/n" + error);
+          window.console.log("新歌推荐获取失败！/n" + error);
           Indicator.close();
         });
     },
@@ -193,9 +204,21 @@ export default {
           Indicator.close();
         })
         .catch(error => {
-          window.console.log("轮播图获取失败！/n" + error);
+          window.console.log("电台推荐获取失败！/n" + error);
           Indicator.close();
         });
+    },
+    playMusic: function(songinfos) {
+      // 根据localStorage的歌曲id,获取详细歌曲的信息
+      let songId = songinfos.song.id;
+      this.$store.commit("setsongInfo", JSON.stringify(songinfos));
+      this.getplayMusic(songId,songinfos);
+    },
+    openDialog: function() {
+      this.visible = true;
+    },
+    closeDialog: function() {
+      this.visible = false;
     }
   },
   created() {

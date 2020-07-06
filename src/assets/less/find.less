@@ -42,14 +42,15 @@
     }
 
     .navigation {
-        padding: 0 0 28px;
+        padding: 0 28px 28px;
         width: 100%;
-        height: 114px;
+        height: 150px;
         overflow-y: hidden;
+        box-sizing: border-box;
 
         ul {
             height: 100%;
-            width: 180%;
+            width: 190%;
             overflow-y: hidden;
             overflow-x: auto;
             scrollbar-width: none;
@@ -61,7 +62,7 @@
 
             li {
                 width: 90px;
-                padding: 0 28px;
+                padding: 0 56px 0 0;
                 float: left;
 
                 div {
@@ -93,7 +94,7 @@
     }
 
     .recommendation {
-        padding: 28px;
+        padding: 0 28px 28px;
 
         .topTile {
             display: flex;
@@ -126,7 +127,7 @@
         }
 
         .concentration {
-            padding: 28px 0;
+            padding: 28px 0 0;
             width: 100%;
             height: 290px;
             overflow-y: hidden;
@@ -166,6 +167,12 @@
                         font-size: 21px;
                         color: #424242;
                         line-height: 1.5;
+                        width: 100%;
+                        overflow:hidden;
+                        text-overflow:ellipsis;
+                        -webkit-line-clamp:2; //长度超过2行显示……
+                        -webkit-box-orient:vertical;
+                        display:-webkit-box; 
                     }
                 }
             }
@@ -176,17 +183,11 @@
 
     .songNew {
         .concentration {
-            height: 250px;
 
             ul {
-                width: 335% ;
+                width: 335%;
             }
         }
     }
 
-    .djprogram {
-        .concentration {
-            height: 250px;
-        }
-    }
 }

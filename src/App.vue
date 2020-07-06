@@ -5,107 +5,230 @@
       <div class="left clearfix">
         <div class="musicImg">
           <span>
-            <img src="./assets/images/lo.png" alt="歌曲封面" />
+            <img :src="song.picUrl" alt="歌曲封面" id="musicImg" />
           </span>
         </div>
         <div class="details">
-          <p class="songTitle">I Believe</p>
+          <p class="songTitle">{{song.name}}</p>
           <p>横滑可以切换上下首哦</p>
         </div>
+        <audio :autoplay="isPlay" ref="audio" :src="songPlayUrl" id="audioPlayer">您的浏览器不支持 audio 标签。</audio>
       </div>
       <div class="right">
-        <i class="iconfont icontubiaozhizuomoban"></i>
+        <i class="iconfont icontubiaozhizuomoban" @click="playAudio()" v-if="!isPlay"></i>
+        <i class="iconfont icontubiaozhizuomoban1" @click="pauseAudio()" v-if="isPlay"></i>
         <i class="iconfont iconbofangliebiao"></i>
       </div>
     </div>
+
+    <mt-popup
+      class="loginUp"
+      v-model="popupVisible"
+      position="center"
+      :closeOnClickModal="clickFalse"
+    >
+      <div class="login">
+        <div class="bgc">
+          <div class="toptitle">
+            <p>网抑云音乐</p>
+          </div>
+          <div class="row">
+            <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="userPhone"></mt-field>
+          </div>
+          <div class="row">
+            <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userPasswid"></mt-field>
+          </div>
+          <div class="btn">
+            <mt-button type="danger" @click="loginOperation()">登录</mt-button>
+          </div>
+        </div>
+      </div>
+    </mt-popup>
   </div>
 </template>
 
+<script>
+import "./assets/less/app.less";
+import { Indicator } from "mint-ui";
+import { Toast } from "mint-ui";
+
+export default {
+  name: "App",
+  data() {
+    return {
+      popupVisible: false,
+      topFloor: "2002 !important",
+      clickFalse: false,
+      userPhone: "",
+      userPasswid: ""
+    };
+  },
+  computed: {
+    isPlay: {
+      //播放状态
+      get() {
+        return this.$store.state.isPlay;
+      },
+      set(v) {
+        // 使用vuex中的mutations中定义好的方法来改变
+        this.$store.commit("setisPlay", v);
+      }
+    },
+    loginStatus: {
+      //歌曲信息
+      get() {
+        return this.$store.state.loginStatus;
+      },
+      set(v) {
+        this.$store.commit("setloginStatus", v);
+      }
+    },
+    song: {
+      //歌曲信息
+      get() {
+        return this.$store.state.songInfo;
+      },
+      set(v) {
+        this.$store.commit("setsongInfo", v);
+      }
+    },
+    songPlayUrl: {
+      //歌曲信息
+      get() {
+        return this.$store.state.songPlayUrl;
+      },
+      set(v) {
+        this.$store.commit("setsongPlayUrl", v);
+      }
+    }
+  },
+  watch: {
+    isPlay: function(newV) {
+      window.console.log("当前播放状态：", newV);
+      if (newV) {
+        this.playAudio();
+      } else {
+        this.pauseAudio();
+      }
+    },
+    popupVisible: function(newV) {
+      if (newV) {
+        this.noScroll(); //禁止主页面滚动
+      } else {
+        //主页面可滑动
+        this.canScroll();
+      }
+    }
+  },
+  methods: {
+    getnewsong: function() {
+      // 获取推荐歌曲
+      this.$axios
+        .get("/personalized/newsong")
+        .then(res => {
+          // window.console.log("新歌推荐", JSON.stringify(res));
+          this.$store.commit("setsongInfo", JSON.stringify(res.data.result[0]));
+          this.getMusicUrl();
+        })
+        .catch(error => {
+          window.console.log("新歌推荐获取失败！/n" + error);
+        });
+    },
+    getMusicUrl: function() {
+      // 根据localStorage的歌曲id,获取详细歌曲的信息
+      this.$axios
+        .get("/song/url", {
+          params: {
+            id: this.song["song"].id
+          }
+        })
+        .then(res => {
+          this.$store.commit("setsongPlayUrl", res.data.data[0].url);
+          this.pauseAudio();
+          // window.console.log(JSON.stringify(res));
+        })
+        .catch(error => {
+          window.console.log("歌曲URL获取失败！", error);
+        });
+    },
+    playAudio: function() {
+      // 播放音乐，并修改状态
+      // window.console.log(document.getElementById("audioPlayer"));
+      this.$refs.audio.play();
+      this.$store.commit("setisPlay", true);
+      let musicrotateAn = document.getElementById("musicImg");
+      musicrotateAn.setAttribute(
+        "style",
+        "-webkit-animation: rotateAn 8s linear infinite; animation: rotateAn 8s linear infinite;"
+      );
+    },
+    pauseAudio: function() {
+      // 暂停音乐，并修改状态
+      this.$refs.audio.pause();
+      this.$store.commit("setisPlay", false);
+      let musicrotateAn = document.getElementById("musicImg");
+      musicrotateAn.setAttribute("style", "");
+    },
+    loginOperation: function() {
+      const phone = this.userPhone;
+      const password = this.userPasswid;
+      let that = this;
+      // 登录网易云
+      if (this.userPhone == "" || this.password == "") {
+        Toast({
+          message: "请填写你的手机号码和密码",
+          position: "top",
+          duration: 3000
+        });
+        throw new Error("请设置你的手机号码和密码");
+      }
+      Indicator.open("登录中...");
+
+      this.$axios({
+        url: `/login/cellphone?phone=${phone}&password=${password}`
+      })
+        .then(function(res) {
+          console.log("登录信息", res.data);
+          Indicator.close();
+          if (res.data.code == 200) {
+            that.$store.commit("setcookie", JSON.stringify(res.data.cookie));
+            that.$store.commit("setprofile", JSON.stringify(res.data.profile));
+            that.$store.commit("setaccount", JSON.stringify(res.data.account));
+            that.popupVisible = false;
+            localStorage["profile"] = JSON.stringify(res.data.profile);
+            Toast({
+              message: "登录成功",
+              position: "top",
+              duration: 3000
+            });
+          }
+        })
+        .catch(error => {
+          window.console.log("登录信息获取失败！/n" + error);
+          Indicator.close();
+        });
+    }
+  },
+  created() {
+    let that = this;
+    setTimeout(function() {
+      // 判断是否需要弹出登录窗，弹出即禁止主页面滚动
+      if (that.loginStatus) {
+        that.popupVisible = false;
+        that.canScroll(); //主页面可滑动
+        that.getnewsong(); //获取新歌推荐
+      } else {
+        that.popupVisible = true;
+        that.noScroll(); //禁止主页面滚动
+      }
+    }, 500);
+  },
+  beforeCreate() {
+    this.getLoginStatus();
+    this.$store.commit("setprofile", localStorage.getItem("profile"));
+  }
+};
+</script>
 
 <style lang="less">
-.tabbar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 106px;
-  border-top: 2px solid #f0f0f0;
-  display: flex;
-  background-color: #fff;
-
-  .left {
-    flex: 8;
-    width: 604px;
-    height: 100%;
-    box-sizing: border-box;
-    padding-left: 10px;
-    display: flex;
-
-    .musicImg {
-      flex: 1;
-      width: 80px;
-      height: 100%;
-      position: relative;
-      span {
-        width: 80px;
-        height: 80px;
-        display: inline-block;
-        background-color: #eee;
-        border-radius: 80px;
-        box-sizing: border-box;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-
-    .details {
-      flex: 6;
-      width: 514px;
-      height: 100%;
-      box-sizing: border-box;
-      padding-top: 8px;
-      padding-left: 10px;
-
-      p:nth-of-type(1) {
-        line-height: 1.8;
-        font-size: 18px;
-        font-weight: bold;
-        color: #000;
-      }
-
-      p:nth-of-type(2) {
-        line-height: 1.8;
-        font-size: 20px;
-        color: #828282;
-      }
-    }
-  }
-  .right {
-    flex: 2;
-    width: 146px;
-    height: 100%;
-    padding-right: 22px;
-    box-sizing: border-box;
-    display: flex;
-
-    .icontubiaozhizuomoban {
-      font-size: 48px;
-      line-height: 106px;
-      padding-right: 38px;
-      flex: 1;
-    }
-
-    .iconbofangliebiao {
-      font-size: 44px;
-      line-height: 106px;
-      flex: 1;
-    }
-  }
-}
 </style>

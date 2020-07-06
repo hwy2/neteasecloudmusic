@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <mt-popup v-model="popupVisible" position="left" >
+    <mt-popup v-model="popupVisible" position="left">
       <div class="content">
         <div class="upperPart">
           <div class="vip">
@@ -30,8 +30,8 @@
           <div class="userProfile">
             <div class="top clearfix">
               <div class="left">
-                <img src="../assets/images/lo.png" alt="头像" />
-                <span>云回忆H</span>
+                <img :src="profile.avatarUrl" alt="头像" />
+                <span>{{profile.nickname}}</span>
               </div>
               <div class="right clearfix">
                 <a href="javascript:void(0)">
@@ -248,8 +248,20 @@ export default {
   data() {
     return {
       popupVisible: false,
-      selected : 'find'
+      selected: "find"
     };
+  },
+  computed: {
+    profile: {
+      //播放状态
+      get() {
+        return this.$store.state.profile;
+      },
+      set(v) {
+        // 使用vuex中的mutations中定义好的方法来改变
+        this.$store.commit("setprofile", v);
+      }
+    }
   },
   methods: {
     ListenDrawer: function() {
@@ -262,7 +274,18 @@ export default {
       window.console.log("上一个选择：" + oldV);
       this.$router.push({ name: newV });
       // this.$store.commit("setSelected", newV);
+    },
+    popupVisible: function(newV) {
+      if (newV) {
+        this.noScroll(); //禁止主页面滚动
+      } else {
+        //主页面可滑动
+        this.canScroll();
+      }
     }
+  },
+  created() {
+    // this.$router.push({ name: "find" });
   }
 };
 </script>
