@@ -140,6 +140,7 @@
 
     <!-- 每日推荐弹出层 -->
     <daily-recommendation @close="closeDialog" v-if="visible"></daily-recommendation>
+    
   </div>
 </template>
 

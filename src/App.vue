@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <router-view />
+    
+    <!-- 底部播放区 -->
     <div class="tabbar clearfix">
       <div class="left clearfix">
         <div class="musicImg">
@@ -21,6 +23,7 @@
       </div>
     </div>
 
+    <!-- 登录层 -->
     <mt-popup
       class="loginUp"
       v-model="popupVisible"

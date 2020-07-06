@@ -222,7 +222,7 @@
       </div>
     </mt-popup>
 
-    <!-- 底部播放区 -->
+    <!-- 顶部导航栏 -->
     <div class="navbarWarp">
       <div class="drawer">
         <i class="iconfont icongengduo" @click="ListenDrawer()"></i>
