@@ -5,14 +5,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isPlay: false,
-    songInfo: [],
-    songPlayUrl: '',
-    cookie: '',
-    account: '',
-    profile: [],
-    dailySongs: [],
-    loginStatus: false
+    isPlay: false, //播放状态 
+    songInfo: [], //音乐信息
+    songPlayUrl: '', //音乐播放链接
+    cookie: '', //登录信息
+    account: '', //登录信息
+    profile: [], //登录，返回的用户信息
+    dailySongs: [], //每日推荐音乐
+    loginStatus: false, // 登录状态
+    playlist:[], //播放列表
+    serialNumber: 0 //播放列表序号
   },
   getters: {
     getisPlay(state) {
@@ -38,6 +40,12 @@ export default new Vuex.Store({
     },
     getloginStatus(state) {
       return state.loginStatus;
+    },
+    getplaylist(state) {
+      return state.playlist;
+    },
+    getserialNumber(state) {
+      return state.serialNumber;
     }
   },
   mutations: {
@@ -65,6 +73,12 @@ export default new Vuex.Store({
     },
     setloginStatus(state, status) {
       state.loginStatus = status;
+    },
+    setplaylist(state, status) {
+      state.playlist = status;
+    },
+    setserialNumber(state, status) {
+      state.serialNumber = status;
     }
   },
   actions: {},

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view />
-    
+
     <!-- 底部播放区 -->
     <div class="tabbar clearfix">
       <div class="left clearfix">
@@ -14,7 +14,13 @@
           <p class="songTitle">{{song.name}}</p>
           <p>横滑可以切换上下首哦</p>
         </div>
-        <audio :autoplay="isPlay" ref="audio" :src="songPlayUrl" id="audioPlayer">您的浏览器不支持 audio 标签。</audio>
+        <audio
+          :autoplay="isPlay"
+          ref="audio"
+          @ended="palyNextSong()"
+          :src="songPlayUrl"
+          id="audioPlayer"
+        >您的浏览器不支持 audio 标签。</audio>
       </div>
       <div class="right">
         <i class="iconfont icontubiaozhizuomoban" @click="playAudio()" v-if="!isPlay"></i>
@@ -102,6 +108,24 @@ export default {
       },
       set(v) {
         this.$store.commit("setsongPlayUrl", v);
+      }
+    },
+    serialNumber: {
+      //歌曲信息
+      get() {
+        return this.$store.state.serialNumber;
+      },
+      set(v) {
+        this.$store.commit("setserialNumber", v);
+      }
+    },
+    playlist: {
+      //歌曲信息
+      get() {
+        return this.$store.state.playlist;
+      },
+      set(v) {
+        this.$store.commit("setplaylist", v);
       }
     }
   },
@@ -210,6 +234,14 @@ export default {
           window.console.log("登录信息获取失败！/n" + error);
           Indicator.close();
         });
+    },
+    palyNextSong: function() {
+      let number = this.serialNumber;
+      let songlist = this.playlist;
+      window.console.log(number, songlist);
+      this.$store.commit("setserialNumber", number + 1);
+      songlist[number + 1]["picUrl"] = songlist[number + 1].al.picUrl;
+      this.getplayMusic(songlist[number + 1].id, songlist[number + 1]);
     }
   },
   created() {
@@ -228,8 +260,8 @@ export default {
     }, 500);
   },
   beforeCreate() {
-    this.getLoginStatus();//获取登录态
-    this.$store.commit("setprofile", localStorage.getItem("profile"));//获取localStorage里的登录信息
+    this.getLoginStatus(); //获取登录态
+    this.$store.commit("setprofile", localStorage.getItem("profile")); //获取localStorage里的登录信息
   }
 };
 </script>

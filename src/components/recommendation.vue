@@ -43,9 +43,9 @@
               </div>
               <!-- song 工具栏 -->
               <div class="songsBar">
-                <div class="left">
+                <div class="left" @click="playMusicAll()">
                   <i class="iconfont iconbofang-"></i>
-                  <span>播放全部</span>
+                  <span >播放全部</span>
                 </div>
                 <div class="right">
                   <i class="iconfont icongengduo1"></i>
@@ -140,6 +140,12 @@ export default {
     playMusic: function(songInfo) {
       songInfo["picUrl"] = songInfo.al.picUrl;
       this.getplayMusic(songInfo.id, songInfo);
+    },
+    playMusicAll:function(){
+      let that = this;
+      that.$store.commit("setplaylist",that.dailySongs)
+      let songlist = that.dailySongs;
+      that.playMusic(songlist[0]);
     }
   },
   created() {

@@ -52,7 +52,7 @@ Vue.prototype.getLoginStatus = function () {
   this.$axios
     .get("/login/status")
     .then(res => {
-      // window.console.log("登录状态:", res.data);
+      window.console.log("登录状态:", res.data);
       if (res.data.code === 200) {
         this.$store.commit("setloginStatus", true);
       } else {
@@ -82,10 +82,20 @@ Vue.prototype.getplayMusic = function (songinfoId, songinfo) {
             }
           })
           .then(res => {
-            this.$store.commit("setsongInfo", JSON.stringify(songinfo));
-            this.$store.commit("setsongPlayUrl", res.data.data[0].url);
-            this.$store.commit("setisPlay", true);
-            window.console.log("歌曲详情：", res.data);
+            if (res.data.data[0].url != null) {
+              this.$store.commit("setsongInfo", JSON.stringify(songinfo));
+              this.$store.commit("setsongPlayUrl", res.data.data[0].url);
+              this.$store.commit("setisPlay", true);
+              window.console.log("歌曲详情：", res.data);
+            } else {
+              this.$store.commit("setisPlay", false);
+              Toast({
+                message: "亲爱的,暂无版权",
+                position: "top",
+                duration: 3000
+              });
+            }
+
           })
           .catch(error => {
             this.$store.commit("setisPlay", false);

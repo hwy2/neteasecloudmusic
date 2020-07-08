@@ -36,4 +36,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 5.获取播放链接{音乐是否可用，获取可用url}
 
-6.播放音乐{只能播放一首，无法播放列表}
+6.播放音乐{只能播放一首，播放列表成功，无跳过VIP歌曲功能}
