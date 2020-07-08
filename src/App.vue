@@ -38,7 +38,6 @@
     >
       <div class="login">
         <div class="bgc">
-          <form action method="post">
             <div class="toptitle">
               <p>网抑云音乐</p>
             </div>
@@ -51,7 +50,6 @@
             <div class="btn">
               <mt-button type="danger" @click="loginOperation()">登录</mt-button>
             </div>
-          </form>
         </div>
       </div>
     </mt-popup>
