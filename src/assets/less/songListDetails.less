@@ -1,7 +1,10 @@
 .dialog-mask {
+    width: 750px !important;
     .dialog-wrapper {
         .dialog-container {
-            .topBanner {
+            width: 375PX;
+
+            .songListTopBanner {
                 height: 500px;
                 background-color: #aea9ad;
 
@@ -53,25 +56,33 @@
                     .rigth {
                         flex: 2;
                         padding-left: 32px;
+                        box-sizing: border-box;
+                        width: 436px;
 
                         .topTitle {
                             p {
+                                width: 400px;
                                 font-size: 30px;
                                 color: #fff;
                                 line-height: 1.5;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
                             }
                         }
 
-                        .user{
+                        .user {
                             padding-top: 24px;
-                            img{
+
+                            img {
                                 width: 50px;
                                 height: 50px;
                                 border-radius: 50px;
                                 vertical-align: middle;
                                 margin-right: 15px;
                             }
-                            span{
+
+                            span {
                                 font-size: 22px;
                                 color: #fff;
                             }

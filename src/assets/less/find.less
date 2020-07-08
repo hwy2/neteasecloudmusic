@@ -1,4 +1,6 @@
 .find {
+    touch-action: pan-y;
+
     .topSwipe {
         width: 92%;
         border-radius: 10px;
@@ -143,11 +145,13 @@
                     float: left;
                     margin-right: 18px;
                     position: relative;
+                    touch-action: pan-x;
 
                     img {
                         height: 214px;
                         width: 214px;
                         border-radius: 10px;
+                        // touch-action: none;
                     }
 
                     span {
@@ -168,11 +172,11 @@
                         color: #424242;
                         line-height: 1.5;
                         width: 100%;
-                        overflow:hidden;
-                        text-overflow:ellipsis;
-                        -webkit-line-clamp:2; //长度超过2行显示……
-                        -webkit-box-orient:vertical;
-                        display:-webkit-box; 
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        -webkit-line-clamp: 2; //长度超过2行显示……
+                        -webkit-box-orient: vertical;
+                        display: -webkit-box;
                     }
                 }
             }
