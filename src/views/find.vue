@@ -1,6 +1,5 @@
 <template>
   <div class="find">
-
     <!-- 顶部banner轮播 -->
     <div class="topSwipe">
       <mt-swipe :auto="3000" :speed="500">
@@ -84,7 +83,7 @@
 
       <div class="concentration">
         <ul>
-          <li v-for="item in personalizedList" :key="item.id" :personalized="item.id">
+          <li v-for="item in personalizedList" :key="item.id"  @click="openSongListDialog(item.id)">
             <img :src="item.picUrl" :alt="item.name" />
             <span>
               <i class="iconfont iconicon--"></i>
@@ -139,8 +138,10 @@
     </div>
 
     <!-- 每日推荐弹出层 -->
-    <daily-recommendation @close="closeDialog" v-if="visible"></daily-recommendation>
-    
+    <daily-recommendation @close="closeDialog" v-if="dailyVisible"></daily-recommendation>
+
+    <!-- 人气歌单弹出层 -->
+    <song-listdetails :songListId="songListId" @shut="closeSongListDialog" v-if="songListVisible"></song-listdetails>
   </div>
 </template>
 
@@ -148,11 +149,13 @@
 import "../assets/less/find.less";
 import { Indicator } from "mint-ui";
 import DailyRecommendation from "../components/recommendation";
+import SongListdetails from "../components/songListDetails";
 
 export default {
   name: "find",
   components: {
-    DailyRecommendation
+    DailyRecommendation,
+    SongListdetails
   },
   data() {
     return {
@@ -160,8 +163,9 @@ export default {
       personalizedList: [],
       newsongList: [],
       djprogramList: [],
-      visible: false,
-      commodityId: 1
+      dailyVisible: false,
+      songListVisible: false,
+      songListId:0
     };
   },
   filters: {
@@ -228,10 +232,18 @@ export default {
     },
     openDialog: function() {
       // dialog开关
-      this.visible = true;
+      this.dailyVisible = true;
     },
     closeDialog: function() {
-      this.visible = false;
+      this.dailyVisible = false;
+    },
+    openSongListDialog: function(id) {
+      // dialog开关
+      this.songListVisible = true;
+      this.songListId = id;
+    },
+    closeSongListDialog: function() {
+      this.songListVisible = false;
     }
   },
   created() {

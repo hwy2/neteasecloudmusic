@@ -38,18 +38,20 @@
     >
       <div class="login">
         <div class="bgc">
-          <div class="toptitle">
-            <p>网抑云音乐</p>
-          </div>
-          <div class="row">
-            <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="userPhone"></mt-field>
-          </div>
-          <div class="row">
-            <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userPasswid"></mt-field>
-          </div>
-          <div class="btn">
-            <mt-button type="danger" @click="loginOperation()">登录</mt-button>
-          </div>
+          <form action method="post">
+            <div class="toptitle">
+              <p>网抑云音乐</p>
+            </div>
+            <div class="row">
+              <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="userPhone" autocomplete="off"></mt-field>
+            </div>
+            <div class="row">
+              <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userPasswid" ></mt-field>
+            </div>
+            <div class="btn">
+              <mt-button type="danger" @click="loginOperation()">登录</mt-button>
+            </div>
+          </form>
         </div>
       </div>
     </mt-popup>
