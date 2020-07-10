@@ -19,7 +19,7 @@
           </div>
           <p>每日推荐</p>
         </li>
-        <li>
+        <li @click="openSongsheetDialog()">
           <div class>
             <i class="iconfont icongedan"></i>
           </div>
@@ -83,11 +83,11 @@
 
       <div class="concentration">
         <ul>
-          <li v-for="item in personalizedList" :key="item.id"  @click="openSongListDialog(item.id)">
+          <li v-for="item in personalizedList" :key="item.id" @click="openSongListDialog(item.id)">
             <img :src="item.picUrl" :alt="item.name" />
             <span>
               <i class="iconfont iconicon--"></i>
-              {{item.playCount|retainDoubleDigit}}万
+              {{item.playCount|retainDoubleDigit}}
             </span>
             <p>{{item.name}}</p>
           </li>
@@ -142,6 +142,9 @@
 
     <!-- 人气歌单弹出层 -->
     <song-listdetails :songListId="songListId" @shut="closeSongListDialog" v-if="songListVisible"></song-listdetails>
+
+    <!-- 歌单列表弹出层 -->
+    <song-sheet @shutdown="closeSongsheetDialog" v-if="songSheetVisible"></song-sheet>
   </div>
 </template>
 
@@ -150,12 +153,14 @@ import "../assets/less/find.less";
 import { Indicator } from "mint-ui";
 import DailyRecommendation from "../components/recommendation";
 import SongListdetails from "../components/songListDetails";
+import SongSheet from "../components/songSheet";
 
 export default {
   name: "find",
   components: {
     DailyRecommendation,
-    SongListdetails
+    SongListdetails,
+    SongSheet
   },
   data() {
     return {
@@ -165,14 +170,19 @@ export default {
       djprogramList: [],
       dailyVisible: false,
       songListVisible: false,
-      songListId:0
+      songListId: 0,
+      songSheetVisible: false
     };
   },
   filters: {
     //拦截器
     retainDoubleDigit: function(data) {
-      // 讲数据转万
-      return Math.floor(data / 10000);
+      // 将数据转万
+      if (data > 100000000) {
+        return (data / 100000000).toFixed(2) + "亿";
+      } else {
+        return (data / 10000).toFixed(2) + "万";
+      }
     }
   },
   methods: {
@@ -244,6 +254,13 @@ export default {
     },
     closeSongListDialog: function() {
       this.songListVisible = false;
+    },
+    openSongsheetDialog: function() {
+      // dialog开关
+      this.songSheetVisible = true;
+    },
+    closeSongsheetDialog: function() {
+      this.songSheetVisible = false;
     }
   },
   created() {

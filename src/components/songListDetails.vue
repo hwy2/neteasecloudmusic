@@ -5,7 +5,7 @@
         <div class="dialog-container" ref="viewBox">
           <div class="containerDiaLog" v-if="rendering">
             <!-- song banner -->
-            <div class="topBanner songListTopBanner" >
+            <div class="topBanner songListTopBanner">
               <div class="topnarBar">
                 <div id="back" @click="songListClose()">
                   <i class="iconfont iconfanhui"></i>
@@ -21,7 +21,7 @@
                   <img :src="songInformation.coverImgUrl" alt="封面" />
                   <span>
                     <i class="iconfont iconicon--"></i>
-                    {{songInformation.playCount|retainDoubleDigit}}万
+                    {{songInformation.playCount|retainDoubleDigit}}
                   </span>
                 </div>
                 <div class="rigth">
@@ -59,7 +59,7 @@
                 </div>
                 <!-- song 工具栏 -->
                 <div class="songsBar">
-                  <div class="left" @click="playMusicAll()">
+                  <div class="left" @click="getplayMusicAll()">
                     <i class="iconfont iconbofang-"></i>
                     <span>播放全部 (共{{songInformation.trackCount}}首)</span>
                   </div>
@@ -120,7 +120,11 @@ export default {
     //拦截器
     retainDoubleDigit: function(data) {
       // 将数据转万
-      return Math.floor(data / 10000);
+      if (data > 100000000) {
+        return (data / 100000000).toFixed(2)+"亿";
+      } else {
+        return (data / 10000).toFixed(2)+"万";
+      }
     }
   },
   props: ["songListId"],
@@ -190,15 +194,10 @@ export default {
       this.getplayMusic(songInfo.id, songInfo);
     },
     getplayMusicAll: function() {
-      this.$axios
-        .get("/song/detail?ids=")
-        .then(res => {
-          //   this.djprogramList = res.data.result;
-          window.console.log("获取歌曲信息", JSON.stringify(res));
-        })
-        .catch(error => {
-          window.console.log("电台推荐获取失败！/n" + error);
-        });
+      let that = this;
+      that.$store.commit("setplaylist", that.songplayList);
+      let songlist = that.songplayList;
+      that.playMusic(songlist[0]);
     }
   },
   created() {
