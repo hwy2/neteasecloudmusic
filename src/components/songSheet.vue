@@ -151,11 +151,11 @@ export default {
             window.console.log("精品歌单", res.data);
             // let temporary = [1,2,3];
             // let playlists = [4,5,6];
-            let temporary = this.highqualityList;
+            let temporary = this.highqualityList.concat(last);
             let playlists = res.data.playlists;
             this.highqualityList = [...temporary, ...playlists];
 
-            window.console.log(this.highqualityList);
+            window.console.log("合并后", this.highqualityList);
 
             if (!res.data.more) {
               this.allLoaded = true; // 若数据已全部获取完毕
