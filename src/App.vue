@@ -38,18 +38,24 @@
     >
       <div class="login">
         <div class="bgc">
-            <div class="toptitle">
-              <p>网抑云音乐</p>
-            </div>
-            <div class="row">
-              <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="userPhone" autocomplete="off"></mt-field>
-            </div>
-            <div class="row">
-              <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userPasswid" ></mt-field>
-            </div>
-            <div class="btn">
-              <mt-button type="danger" @click="loginOperation()">登录</mt-button>
-            </div>
+          <div class="toptitle">
+            <p>网抑云音乐</p>
+          </div>
+          <div class="row">
+            <mt-field
+              label="手机号"
+              placeholder="请输入手机号"
+              type="tel"
+              v-model="userPhone"
+              autocomplete="off"
+            ></mt-field>
+          </div>
+          <div class="row">
+            <mt-field label="密码" placeholder="请输入密码" type="password" v-model="userPasswid"></mt-field>
+          </div>
+          <div class="btn">
+            <mt-button type="danger" @click="loginOperation()">登录</mt-button>
+          </div>
         </div>
       </div>
     </mt-popup>
@@ -260,7 +266,23 @@ export default {
     }, 500);
   },
   beforeCreate() {
-    this.getLoginStatus(); //获取登录态
+
+    let res = new Promise(resolve => {
+      resolve(this.getLoginStatus());
+    }); //获取登录态
+
+    res.then((data) => {
+      //执行代码逻辑
+      window.console.log("登录状态:", data.data);
+      if (data.data.code === 200) {
+        this.$store.commit("setloginStatus", true);
+      } else {
+        this.$store.commit("setloginStatus", false);
+      }
+    },(err)=>{
+       window.console.log("登录状态获取失败！:",err);
+    });
+
     this.$store.commit("setprofile", localStorage.getItem("profile")); //获取localStorage里的登录信息
   }
 };

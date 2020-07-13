@@ -49,19 +49,22 @@ Vue.prototype.canScroll = function () {
 
 //获取当前登录态
 Vue.prototype.getLoginStatus = function () {
-  this.$axios
+
+ return this.$axios
     .get("/login/status")
-    .then(res => {
-      window.console.log("登录状态:", res.data);
-      if (res.data.code === 200) {
-        this.$store.commit("setloginStatus", true);
-      } else {
-        this.$store.commit("setloginStatus", false);
-      }
-    })
-    .catch(error => {
-      window.console.log("获取登录态失败！", error);
-    });
+    // .then(res => {
+    //   // window.console.log("登录状态:", res.data);
+    //   if (res.data.code === 200) {
+    //     this.$store.commit("setloginStatus", true);
+    //   } else {
+    //     this.$store.commit("setloginStatus", false);
+    //   }
+    // })
+    // .catch(error => {
+    //   window.console.log("获取登录态失败！", error);
+    // });
+
+
 }
 
 Vue.prototype.getplayMusic = function (songinfoId, songinfo) {

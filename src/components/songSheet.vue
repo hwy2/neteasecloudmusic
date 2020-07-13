@@ -1,71 +1,79 @@
 <template>
-  <transition name="fade">
-    <div class="dialog-mask">
-      <div class="dialog-wrapper animated fadeInUp" ref="dialogWrapper">
-        <div class="dialog-container" ref="viewBox">
-          <div class="containerDiaLog" v-if="rendering">
-            <!-- song banner -->
-            <div class="topBanner songListTopBanner songSheetTopBanner">
-              <div class="topnarBar">
-                <div id="back" @click="songListClose()">
-                  <i class="iconfont iconfanhui"></i>
-                  <span>歌单广场</span>
-                </div>
-              </div>
-
-              <div class="navbarSorll">
-                <ul class="clearfix">
-                  <li
-                    :class="{active:item.activity}"
-                    id="item.id"
-                    v-for="(item,index) in categoryHot"
-                    :key="item.id"
-                    @click="gethighquality(index,item.name)"
-                  >{{item.name}}</li>
-                </ul>
+  <div class="dialog-mask">
+    <div class="dialog-wrapper animated fadeInUp" ref="dialogWrapper">
+      <div class="dialog-container" ref="viewBox">
+        <div class="containerDiaLog" v-if="rendering">
+          <!-- song banner -->
+          <div class="topBanner songListTopBanner songSheetTopBanner">
+            <div class="topnarBar">
+              <div id="back" @click="songListClose()">
+                <i class="iconfont iconfanhui"></i>
+                <span>歌单广场</span>
               </div>
             </div>
 
-            <!-- song LIST -->
-            <div class="sheet">
-              <mt-loadmore
-                :bottomMethod="loadBottom"
-                :bottom-all-loaded="allLoaded"
-                :auto-fill="false"
-                ref="loadmore"
-              >
-                <ul class="clearfix">
-                  <li v-for="item in highqualityList" :key="item.id">
-                    <img :src="item.coverImgUrl" alt="歌单封面" />
-                    <span>
-                      <i class="iconfont iconicon--"></i>
-                      {{item.playCount|retainDoubleDigit}}
-                    </span>
-                    <p>{{item.name}}</p>
-                  </li>
-                </ul>
-              </mt-loadmore>
+            <div class="navbarSorll">
+              <ul class="clearfix">
+                <li
+                  :class="{active:item.activity}"
+                  id="item.id"
+                  v-for="(item,index) in categoryHot"
+                  :key="item.id"
+                  @click="gethighquality(index,item.name)"
+                >{{item.name}}</li>
+              </ul>
             </div>
+          </div>
+
+          <!-- song LIST -->
+          <div class="sheet">
+            <mt-loadmore
+              :bottomMethod="loadBottom"
+              :bottom-all-loaded="allLoaded"
+              :auto-fill="false"
+              ref="loadmore"
+            >
+              <ul class="clearfix">
+                <li v-for="item in highqualityList" :key="item.id" @click="openSongListDialog(item.id)">
+                  <img :src="item.coverImgUrl" alt="歌单封面" />
+                  <span>
+                    <i class="iconfont iconicon--"></i>
+                    {{item.playCount|retainDoubleDigit}}
+                  </span>
+                  <p>{{item.name}}</p>
+                </li>
+              </ul>
+            </mt-loadmore>
           </div>
         </div>
       </div>
     </div>
-  </transition>
+
+
+    <!-- 歌单详情弹出层 -->
+    <song-listdetails :songListId="songListId" @shut="closeSongListDialog" v-if="songListVisible"></song-listdetails>
+  </div>
 </template>
 <script >
 import "../assets/less/songSheet.less";
 // import { Toast } from "mint-ui";
 import { Indicator } from "mint-ui";
+import SongListdetails from "../components/songListDetails";
 
 export default {
   name: "SongSheet",
+  components: {
+    SongListdetails
+  },
   data() {
     return {
       rendering: false,
       categoryHot: [],
       highqualityList: [],
       allLoaded: false,
-      cat: ""
+      cat: "",
+      songListVisible: false,
+      songListId: ""
     };
   },
   filters: {
@@ -88,7 +96,7 @@ export default {
       this.$axios
         .get("/playlist/hot")
         .then(res => {
-          window.console.log("热门分类", res.data);
+          // window.console.log("热门分类", res.data);
           this.categoryHot = res.data.tags;
 
           //添加推荐标签
@@ -123,7 +131,7 @@ export default {
           params: params
         })
         .then(res => {
-          window.console.log("精品歌单", res.data);
+          // window.console.log("精品歌单", res.data);
           this.highqualityList = res.data.playlists;
           this.allLoaded = false;
           Indicator.close();
@@ -135,12 +143,14 @@ export default {
     },
     loadBottom: function() {
       let params = {};
-      let last = this.highqualityList.pop();
+      // let last = this.highqualityList.pop();
       params["limit"] = 20;
       if (this.cat != "" && this.cat != "推荐") {
         params["cat"] = this.cat;
       }
-      params["before"] = last.updateTime;
+      params["before"] = this.highqualityList[
+        this.highqualityList.length - 1
+      ].updateTime;
 
       this.$axios
         .get("/top/playlist/highquality", {
@@ -148,14 +158,12 @@ export default {
         })
         .then(res => {
           if (res.data.code === 200) {
-            window.console.log("精品歌单", res.data);
-            // let temporary = [1,2,3];
-            // let playlists = [4,5,6];
-            let temporary = this.highqualityList.concat(last);
+            // window.console.log("精品歌单", res.data);
+            let temporary = this.highqualityList;
             let playlists = res.data.playlists;
             this.highqualityList = [...temporary, ...playlists];
 
-            window.console.log("合并后", this.highqualityList);
+            // window.console.log("合并后", this.highqualityList);
 
             if (!res.data.more) {
               this.allLoaded = true; // 若数据已全部获取完毕
@@ -168,6 +176,14 @@ export default {
           Indicator.close();
           window.console.log("精品歌单获取失败", error);
         });
+    },
+    openSongListDialog: function(id) {
+      // dialog开关
+      this.songListVisible = true;
+      this.songListId = id;
+    },
+    closeSongListDialog: function() {
+      this.songListVisible = false;
     }
   },
   created() {
