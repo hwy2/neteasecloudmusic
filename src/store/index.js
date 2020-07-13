@@ -13,7 +13,7 @@ export default new Vuex.Store({
     profile: [], //登录，返回的用户信息
     dailySongs: [], //每日推荐音乐
     loginStatus: false, // 登录状态
-    playlist:[], //播放列表
+    playlist: [], //播放列表
     serialNumber: 0 //播放列表序号
   },
   getters: {
@@ -72,7 +72,12 @@ export default new Vuex.Store({
       state.dailySongs = JSON.parse(status);
     },
     setloginStatus(state, status) {
-      state.loginStatus = status;
+      if (status === 200) {
+        state.loginStatus = true;
+      } else {
+        state.loginStatus = false;
+      }
+
     },
     setplaylist(state, status) {
       state.playlist = status;

@@ -274,11 +274,8 @@ export default {
     res.then((data) => {
       //执行代码逻辑
       window.console.log("登录状态:", data.data);
-      if (data.data.code === 200) {
-        this.$store.commit("setloginStatus", true);
-      } else {
-        this.$store.commit("setloginStatus", false);
-      }
+      this.$store.commit("setloginStatus", data.data.code);
+
     },(err)=>{
        window.console.log("登录状态获取失败！:",err);
     });
