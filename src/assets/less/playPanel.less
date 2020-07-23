@@ -1,0 +1,227 @@
+fade {
+    width: 100%;
+    height: 100%;
+}
+
+
+.panelDialog {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2008;
+    display: table;
+    animation-duration: 0.6s;
+    overflow: auto;
+    font-family: "Microsoft YaHei";
+
+    .container {
+        margin: auto;
+        top: 50%;
+        background-color: #fff;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+
+        background: url(../images/panel.png) no-repeat center center;
+        background-size: 100% 100%;
+
+        .topBanner {
+            height: 120px;
+            background-size: 100% 100%;
+
+            .topnarBar {
+                display: flex;
+                padding: 40px 32px 0;
+
+                #back {
+                    flex: 4;
+                    display: block;
+                    border-radius: 50px;
+                    display: flex;
+
+                    i {
+                        font-size: 42px;
+                        color: #fff;
+                        flex: 1.5;
+                    }
+
+                    .right {
+                        flex: 15;
+                        color: #fff;
+                        line-height: 42px;
+                        justify-content: center;
+
+                        p {
+                            font-size: 30px;
+                            font-weight: bold;
+                            line-height: 42px;
+                        }
+                    }
+                }
+
+                .more {
+                    flex: 1;
+                    display: block;
+                    border-radius: 50px;
+                    text-align: right;
+
+                    i {
+                        font-size: 42px;
+                        color: #fff;
+                        text-align: right;
+                    }
+                }
+            }
+        }
+
+        .disc {
+            padding-top: 160px;
+
+            .cantilever {
+                position: relative;
+                width: 100%;
+                transform-style: preserve-3d;
+                transition: all 0.6s;
+                z-index: 2;
+
+                img:nth-of-type(1) {
+                    width: 300px;
+                    height: 240px;
+                    position: absolute;
+                    top: -160px;
+                    left: 75%;
+                    transform: rotateZ(8deg) translateX(-75%);
+                    display: block;
+                }
+
+                img:nth-of-type(2) {
+                    width: 226px;
+                    height: 316px;
+                    position: absolute;
+                    top: -180px;
+                    left: 70%;
+                    transform: rotateZ(7deg) translateX(-85%);
+                }
+            }
+
+            .diskConater {
+                width: 100%;
+                overflow: hidden;
+                .disk {
+                    width: 570px;
+                    height: 570px;
+                    display: block;
+                    margin: 0 auto;
+                    background: url(../images/disk.png) no-repeat center center;
+                    background-size: 100% 100%;
+                    border-radius: 570px;
+
+                    .songPic {
+                        width: 400px;
+                        height: 400px;
+                        background-color: #fff;
+                        border-radius: 400px;
+                        display: block;
+                        margin: 0 auto;
+                        transform: translateY(20%);
+
+                        img {
+                            width: 400px;
+                            height: 400px;
+                            border-radius: 400px;
+                            display: block;
+                            margin: 0 auto;
+                        }
+                    }
+                }
+            }
+
+
+
+        }
+
+        .lyric {
+            height: 180px;
+        }
+
+        .operation {
+
+            .tool,
+            .roadcast {
+                padding: 0 100px;
+                box-sizing: border-box;
+                display: flex;
+                justify-content: center;
+                line-height: 110px;
+
+
+                i {
+                    flex: 2;
+                    text-align: center;
+                    font-size: 40px;
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+
+            .roadcast {
+                i:nth-of-type(3) {
+                    font-size: 70px;
+                    font-weight: 100;
+                }
+            }
+
+            .progress {
+                padding: 0 .48rem;
+
+                .mt-progress {
+                    div {
+                        color: #fff;
+                    }
+
+                    .mt-progress-content {
+                        margin: 0 10px;
+
+                        .mt-progress-progress,
+                        .mt-progress-runway {
+                            height: 3px !important;
+                        }
+
+                        .mt-progress-runway {
+                            background-color: #9f7a81;
+                        }
+
+                        .mt-progress-progress {
+                            background-color: #fff;
+                        }
+                    }
+                }
+
+
+            }
+        }
+    }
+}
+
+
+// 动画
+@keyframes rollingPlate {
+    0% {
+        -webkit-transform: rotate(0deg);
+
+        -ms-transform: rotate(0deg);
+
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+
+        -ms-transform: rotate(360deg);
+
+        transform: rotate(360deg);
+    }
+}

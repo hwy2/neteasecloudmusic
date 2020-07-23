@@ -14,7 +14,8 @@ export default new Vuex.Store({
     dailySongs: [], //每日推荐音乐
     loginStatus: false, // 登录状态
     playlist: [], //播放列表
-    serialNumber: 0 //播放列表序号
+    serialNumber: 0, //播放列表序号
+    musicSize :0
   },
   getters: {
     getisPlay(state) {
@@ -46,6 +47,9 @@ export default new Vuex.Store({
     },
     getserialNumber(state) {
       return state.serialNumber;
+    },
+    getmusicSize(state) {
+      return state.musicSize;
     }
   },
   mutations: {
@@ -84,6 +88,9 @@ export default new Vuex.Store({
     },
     setserialNumber(state, status) {
       state.serialNumber = status;
+    },
+    setmusicSize(state, status) {
+      state.musicSize = status;
     }
   },
   actions: {},

@@ -4,7 +4,7 @@
 
     <!-- 底部播放区 -->
     <div class="tabbar clearfix">
-      <div class="left clearfix">
+      <div class="left clearfix" @click="openPanelDialog()">
         <div class="musicImg">
           <span>
             <img :src="song.picUrl" alt="歌曲封面" id="musicImg" />
@@ -59,6 +59,9 @@
         </div>
       </div>
     </mt-popup>
+
+    <!-- 播放详情 -->
+    <panel-play @panelClose="closePanelDialog" v-if="panelVisible" :appthat="that"></panel-play>
   </div>
 </template>
 
@@ -66,17 +69,23 @@
 import "./assets/less/app.less";
 import { Indicator } from "mint-ui";
 import { Toast } from "mint-ui";
+import PanelPlay from "./components/playPanel";
 
 export default {
   name: "App",
   data() {
     return {
+      that: this,
       popupVisible: false,
       topFloor: "2002 !important",
       clickFalse: false,
       userPhone: "",
-      userPasswid: ""
+      userPasswid: "",
+      panelVisible: false,
     };
+  },
+  components: {
+    PanelPlay,
   },
   computed: {
     isPlay: {
@@ -87,16 +96,16 @@ export default {
       set(v) {
         // 使用vuex中的mutations中定义好的方法来改变
         this.$store.commit("setisPlay", v);
-      }
+      },
     },
     loginStatus: {
-      //歌曲信息
+      //登录状态
       get() {
         return this.$store.state.loginStatus;
       },
       set(v) {
         this.$store.commit("setloginStatus", v);
-      }
+      },
     },
     song: {
       //歌曲信息
@@ -105,38 +114,38 @@ export default {
       },
       set(v) {
         this.$store.commit("setsongInfo", v);
-      }
+      },
     },
     songPlayUrl: {
-      //歌曲信息
+      //歌曲URL
       get() {
         return this.$store.state.songPlayUrl;
       },
       set(v) {
         this.$store.commit("setsongPlayUrl", v);
-      }
+      },
     },
     serialNumber: {
-      //歌曲信息
+      //播放列表序号
       get() {
         return this.$store.state.serialNumber;
       },
       set(v) {
         this.$store.commit("setserialNumber", v);
-      }
+      },
     },
     playlist: {
-      //歌曲信息
+      //歌曲列表
       get() {
         return this.$store.state.playlist;
       },
       set(v) {
         this.$store.commit("setplaylist", v);
-      }
-    }
+      },
+    },
   },
   watch: {
-    isPlay: function(newV) {
+    isPlay: function (newV) {
       window.console.log("当前播放状态：", newV);
       if (newV) {
         this.playAudio();
@@ -144,47 +153,47 @@ export default {
         this.pauseAudio();
       }
     },
-    popupVisible: function(newV) {
+    popupVisible: function (newV) {
       if (newV) {
         this.noScroll(); //禁止主页面滚动
       } else {
         //主页面可滑动
         this.canScroll();
       }
-    }
+    },
   },
   methods: {
-    getnewsong: function() {
+    getnewsong: function () {
       // 获取推荐歌曲
       this.$axios
         .get("/personalized/newsong")
-        .then(res => {
+        .then((res) => {
           // window.console.log("新歌推荐", JSON.stringify(res));
           this.$store.commit("setsongInfo", JSON.stringify(res.data.result[0]));
           this.getMusicUrl();
         })
-        .catch(error => {
+        .catch((error) => {
           window.console.log("新歌推荐获取失败！/n" + error);
         });
     },
-    getMusicUrl: function() {
+    getMusicUrl: function () {
       // 根据localStorage的歌曲id,获取详细歌曲的信息
       this.$axios
         .get("/song/url", {
           params: {
-            id: this.song["song"].id
-          }
+            id: this.song["song"].id,
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.$store.commit("setsongPlayUrl", res.data.data[0].url);
           this.pauseAudio();
-          // window.console.log(JSON.stringify(res));
+          window.console.log("详细歌曲的信息", JSON.stringify(res));
         })
-        .catch(error => {
+        .catch((error) => {
           window.console.log("歌曲URL获取失败！", error);
         });
     },
-    playAudio: function() {
+    playAudio: function () {
       // 播放音乐，并修改状态
       // window.console.log(document.getElementById("audioPlayer"));
       this.$refs.audio.play();
@@ -195,14 +204,14 @@ export default {
         "-webkit-animation: rotateAn 8s linear infinite; animation: rotateAn 8s linear infinite;"
       );
     },
-    pauseAudio: function() {
+    pauseAudio: function () {
       // 暂停音乐，并修改状态
       this.$refs.audio.pause();
       this.$store.commit("setisPlay", false);
       let musicrotateAn = document.getElementById("musicImg");
       musicrotateAn.setAttribute("style", "");
     },
-    loginOperation: function() {
+    loginOperation: function () {
       const phone = this.userPhone;
       const password = this.userPasswid;
       let that = this;
@@ -211,16 +220,16 @@ export default {
         Toast({
           message: "请填写你的手机号码和密码",
           position: "top",
-          duration: 3000
+          duration: 3000,
         });
         throw new Error("请设置你的手机号码和密码");
       }
       Indicator.open("登录中...");
 
       this.$axios({
-        url: `/login/cellphone?phone=${phone}&password=${password}`
+        url: `/login/cellphone?phone=${phone}&password=${password}`,
       })
-        .then(function(res) {
+        .then(function (res) {
           console.log("登录信息", res.data);
           Indicator.close();
           if (res.data.code == 200) {
@@ -232,28 +241,39 @@ export default {
             Toast({
               message: "登录成功",
               position: "top",
-              duration: 3000
+              duration: 3000,
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           window.console.log("登录信息获取失败！/n" + error);
           Indicator.close();
         });
     },
-    palyNextSong: function() {
+    palyNextSong: function () {
       let number = this.serialNumber;
       let songlist = this.playlist;
       window.console.log(number, songlist);
-      this.$store.commit("setserialNumber", number + 1);
-      songlist[number + 1]["picUrl"] = songlist[number + 1].al.picUrl;
-      this.getplayMusic(songlist[number + 1].id, songlist[number + 1]);
-    }
+      if (songlist.length > 1) {
+        this.$store.commit("setserialNumber", number + 1);
+        songlist[number + 1]["picUrl"] = songlist[number + 1].al.picUrl;
+        this.getplayMusic(songlist[number + 1].id, songlist[number + 1]);
+      } else {
+        this.$store.commit("setisPlay", false);
+      }
+    },
+    closePanelDialog: function () {
+      this.panelVisible = false;
+    },
+    openPanelDialog: function () {
+      // dialog开关
+      this.panelVisible = true;
+    },
   },
   created() {
     let that = this;
     // 暂停0.5s,等待loginStatus状态更新
-    setTimeout(function() {
+    setTimeout(function () {
       // 判断是否需要弹出登录窗，弹出即禁止主页面滚动
       if (that.loginStatus) {
         that.popupVisible = false;
@@ -263,25 +283,26 @@ export default {
         that.popupVisible = true;
         that.noScroll(); //禁止主页面滚动
       }
-    }, 500);
+    }, 800);
   },
   beforeCreate() {
-
-    let res = new Promise(resolve => {
+    let res = new Promise((resolve) => {
       resolve(this.getLoginStatus());
     }); //获取登录态
 
-    res.then((data) => {
-      //执行代码逻辑
-      window.console.log("登录状态:", data.data);
-      this.$store.commit("setloginStatus", data.data.code);
-
-    },(err)=>{
-       window.console.log("登录状态获取失败！:",err);
-    });
+    res.then(
+      (data) => {
+        //执行代码逻辑
+        window.console.log("登录状态:", data.data);
+        this.$store.commit("setloginStatus", data.data.code);
+      },
+      (err) => {
+        window.console.log("登录状态获取失败！:", err);
+      }
+    );
 
     this.$store.commit("setprofile", localStorage.getItem("profile")); //获取localStorage里的登录信息
-  }
+  },
 };
 </script>
 
