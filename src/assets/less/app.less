@@ -55,6 +55,10 @@
                 font-size: 18px;
                 font-weight: bold;
                 color: #000;
+                width: 90%;
+                overflow: hidden; //隐藏文字
+                text-overflow: ellipsis; //显示...
+                white-space: nowrap; //不换行
             }
 
             p:nth-of-type(2) {
@@ -208,11 +212,11 @@
 }
 
 .mint-toast {
-    z-index: 2003 !important;
+    z-index: 9999 !important;
 }
 
 .mint-toast-text {
-    z-index: 2003 !important;
+    z-index: 9999 !important;
 }
 
 @keyframes rotateAn {

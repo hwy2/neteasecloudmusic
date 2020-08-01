@@ -143,6 +143,15 @@ export default {
         this.$store.commit("setplaylist", v);
       },
     },
+    profile: {
+      //歌曲列表
+      get() {
+        return this.$store.state.profile;
+      },
+      set(v) {
+        this.$store.commit("setprofile", v);
+      },
+    },
   },
   watch: {
     isPlay: function (newV) {
@@ -164,16 +173,27 @@ export default {
   },
   methods: {
     getnewsong: function () {
-      // 获取推荐歌曲
-      this.$axios
-        .get("/personalized/newsong")
+      let that = this;
+      // 获取播放记录歌曲
+      that
+        .$axios({
+          url: "/user/record",
+          params: {
+            uid: that.profile.userId,
+            type: 1,
+          },
+        })
         .then((res) => {
-          // window.console.log("新歌推荐", JSON.stringify(res));
-          this.$store.commit("setsongInfo", JSON.stringify(res.data.result[0]));
-          this.getMusicUrl();
+          // window.console.log("播放记录", JSON.stringify(res));
+          res.data.weekData[res.data.weekData.length - 1].song["picUrl"]=res.data.weekData[res.data.weekData.length - 1].song.al.picUrl
+          that.$store.commit(
+            "setsongInfo",
+            JSON.stringify(res.data.weekData[res.data.weekData.length - 1].song)
+          );
+          that.getMusicUrl();
         })
         .catch((error) => {
-          window.console.log("新歌推荐获取失败！/n" + error);
+          window.console.log("播放记录获取失败！", error);
         });
     },
     getMusicUrl: function () {
@@ -187,7 +207,7 @@ export default {
         .then((res) => {
           this.$store.commit("setsongPlayUrl", res.data.data[0].url);
           this.pauseAudio();
-          window.console.log("详细歌曲的信息", JSON.stringify(res));
+          // window.console.log("详细歌曲的信息", JSON.stringify(res));
         })
         .catch((error) => {
           window.console.log("歌曲URL获取失败！", error);
@@ -251,16 +271,7 @@ export default {
         });
     },
     palyNextSong: function () {
-      let number = this.serialNumber;
-      let songlist = this.playlist;
-      window.console.log(number, songlist);
-      if (songlist.length > 1) {
-        this.$store.commit("setserialNumber", number + 1);
-        songlist[number + 1]["picUrl"] = songlist[number + 1].al.picUrl;
-        this.getplayMusic(songlist[number + 1].id, songlist[number + 1]);
-      } else {
-        this.$store.commit("setisPlay", false);
-      }
+      this.nextSong(this.serialNumber, this.playlist);
     },
     closePanelDialog: function () {
       this.panelVisible = false;
@@ -272,13 +283,14 @@ export default {
   },
   created() {
     let that = this;
-    // 暂停0.5s,等待loginStatus状态更新
+    // 暂停0.8s,等待loginStatus状态更新
     setTimeout(function () {
       // 判断是否需要弹出登录窗，弹出即禁止主页面滚动
       if (that.loginStatus) {
         that.popupVisible = false;
         that.canScroll(); //主页面可滑动
         that.getnewsong(); //获取新歌推荐
+        // that.gethomedata();//获取首页-发现内容
       } else {
         that.popupVisible = true;
         that.noScroll(); //禁止主页面滚动

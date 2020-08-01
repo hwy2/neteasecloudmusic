@@ -52,7 +52,7 @@
 
         ul {
             height: 100%;
-            width: 190%;
+            width: 170%;
             overflow-y: hidden;
             overflow-x: auto;
             scrollbar-width: none;
@@ -76,11 +76,20 @@
                     border-radius: 82px;
                     line-height: 82px;
                     text-align: center;
+                    position: relative;
 
-                    i {
-                        font-size: 42px;
-                        color: #fff;
-                        font-weight: 500;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                    span{
+                        position: absolute;
+                        top: 52%;
+                        left: 50%;
+                        transform: translate(-50%,-50%);
+                        color: #ff261d;
+
                     }
                 }
 
@@ -96,7 +105,7 @@
     }
 
     .recommendation {
-        padding: 0 28px 28px;
+        padding: 28px;
 
         .topTile {
             display: flex;
@@ -186,10 +195,101 @@
     }
 
     .songNew {
+        .topTile{
+            .right{
+                a{
+                    width: 150px;
+                }
+            }
+        }
         .concentration {
 
-            ul {
-                width: 335%;
+            ul.topUl {
+                width: 397%;
+
+
+                li {
+                    width: 670px;
+                      touch-action: pan-x;
+
+                    .smallList {
+                        width: 100%;
+                        li {
+                            display: flex;
+                            padding-bottom: 18px;
+
+                            span{
+                                position: unset;
+                            }
+
+                            .left {
+                                flex: 2;
+
+                                img {
+                                    height: 74px;
+                                    width: 74px;
+                                    border-radius: 5px;
+
+                                }
+                            }
+
+                            .center {
+                                flex: 9;
+
+                                p:nth-of-type(1) {
+                                    width: 420px;
+                                    display: block;
+                                    overflow: hidden; //隐藏文字
+                                    text-overflow: ellipsis; //显示...
+                                    white-space: nowrap; //不换行
+
+                                    span:nth-of-type(1) {
+                                        font-size: 32px;
+                                        color: #000;
+                                    }
+
+                                    span:nth-of-type(2) {
+                                        font-size: 26px;
+                                        color: #909090;
+                                        width: 240px;
+                                    }
+                                }
+
+                                p:nth-of-type(2) {
+                                    font-size: 26px;
+                                }
+                            }
+
+                            .right {
+                                flex: 1;
+
+                                .icon {
+                                    display: flex;
+
+                                    i {
+                                        flex: 2;
+                                        font-size: 40px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .cloudVillage{
+        .concentration{
+            height: 400px;
+            ul{
+                width: 135%;
+                li{
+                    img{
+                        height:276px;
+                        width: 213px;
+                    }
+                }
             }
         }
     }

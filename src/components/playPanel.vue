@@ -33,7 +33,21 @@
         </div>
 
         <!-- 歌词 -->
-        <div class="lyric"></div>
+        <div class="lyric-conater" id="lyric-conater">
+          <scroll class="lyric-wrapper" ref="lyricList" :data="currentLyric && currentLyric.lines">
+            <div>
+              <div class="lyric">
+                <p
+                  v-for="(line,index) in currentLyric.lines"
+                  ref="lyricLine"
+                  :key="index"
+                  :class="{'current':currentLineNum===index}"
+                  class="text"
+                >{{line.txt}}</p>
+              </div>
+            </div>
+          </scroll>
+        </div>
 
         <!-- 操作区 -->
         <div class="operation">
@@ -52,10 +66,10 @@
           </div>
           <div class="roadcast">
             <i class="iconfont iconliebiaoxunhuan"></i>
-            <i class="iconfont iconshangyishoushangyige"></i>
+            <i class="iconfont iconshangyishoushangyige" @click="playlast()"></i>
             <i v-if="!isPlay" class="iconfont iconbofang1" @click="playMusic()"></i>
             <i v-if="isPlay" class="iconfont iconzanting" @click="pauseMusic()"></i>
-            <i class="iconfont iconxiayigexiayishou"></i>
+            <i class="iconfont iconxiayigexiayishou" @click="playnext()"></i>
             <i class="iconfont iconbofangliebiao"></i>
           </div>
         </div>
@@ -66,6 +80,8 @@
 
 <script>
 import "../assets/less/playPanel.less";
+import Scroll from "./scroll";
+import Lyric from "lyric-parser";
 
 export default {
   name: "PlayPanel",
@@ -75,9 +91,15 @@ export default {
       percentage: 0,
       currentTimes: 0,
       durations: 0,
+      currentLyric: [],
+      currentLineNum: 0,
+      playingLyric: "",
     };
   },
   props: ["appthat"],
+  components: {
+    Scroll,
+  },
   filters: {
     //拦截器
     formatDateTime: function (data, that) {
@@ -105,14 +127,34 @@ export default {
         this.$store.commit("setsongInfo", v);
       },
     },
+    serialNumber: {
+      //播放列表序号
+      get() {
+        return this.$store.state.serialNumber;
+      },
+      set(v) {
+        this.$store.commit("setserialNumber", v);
+      },
+    },
+    playlist: {
+      //歌曲列表
+      get() {
+        return this.$store.state.playlist;
+      },
+      set(v) {
+        this.$store.commit("setplaylist", v);
+      },
+    },
   },
   watch: {
     isPlay: function (newV) {
       window.console.log("当前播放状态：", newV);
       if (newV) {
         this.playMusic();
+        this.currentLyric.play();
       } else {
         this.pauseMusic();
+        this.currentLyric.stop();
       }
     },
   },
@@ -180,20 +222,77 @@ export default {
       let musicrotateAn = document.getElementById("diskRotate");
       musicrotateAn.setAttribute("style", "");
     },
+    playnext: function () {
+      this.nextSong(this.serialNumber, this.playlist);
+    },
+    playlast: function () {
+      this.lastSong(this.serialNumber, this.playlist);
+    },
+    getlyric: function () {
+      // 根据音乐id获取歌词
+      // window.console.log(this.songInfo)
+      this.$axios
+        .get("/lyric", {
+          params: {
+            id: this.songInfo.id?this.songInfo.id:this.songInfo.resourceId,
+          },
+        })
+        .then((res) => {
+          // window.console.log("详细歌词信息", JSON.stringify(res));
+
+          // 新建歌词对象
+          this.currentLyric = new Lyric(res.data.lrc.lyric, this.handleLyric);
+          // 跳转到相应位置
+          this.currentLyric.seek(this.currentTimes);
+          // 判断是否播放
+          if (this.isPlay) {
+            this.currentLyric.play();
+          } else {
+            this.currentLyric.stop();
+          }
+
+          window.console.log("详细歌词信息格式化：", this.currentLyric);
+        })
+        .catch((error) => {
+          window.console.log("歌词获取失败！", error);
+        });
+    },
+    handleLyric({ lineNum, txt }) {
+      this.currentLineNum = lineNum;
+      window.console.log(lineNum);
+      if (lineNum > 2) {
+        let lineEl = this.$refs.lyricLine[lineNum - 2];
+        window.console.log(lineEl);
+        // this.$refs.lyricList.scrollTop = 200;
+
+        var musicrotateAn = document.getElementById("lyric-conater");
+        musicrotateAn.scrollTop = 25 * (lineNum - 2);
+        // this.$refs.lyricList.scrollToElement(lineEl, 500); // 滚动到元素
+      } else {
+        this.$refs.lyricList.scrollTo(0, 0, 1000); // 滚动到顶部
+      }
+      this.playingLyric = txt;
+    },
   },
 
   created() {
     let that = this;
+    that.getlyric();
+    that.noScroll(); //禁止主页面滚动
     setTimeout(function () {
-      that.currentTimes = that.appthat.$refs.audio.currentTime*1000;
+      that.currentTimes = that.appthat.$refs.audio.currentTime * 1000;
       if (that.isPlay) {
         that.playMusic();
       } else {
         that.pauseMusic();
       }
-    }, 100);
+    }, 500);
 
     that.durations = that.appthat.$refs.audio.duration * 1000;
+  },
+  destroyed() {
+    //主页面可滑动
+    this.canScroll();
   },
 };
 </script>

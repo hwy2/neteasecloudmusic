@@ -50,23 +50,24 @@ Vue.prototype.canScroll = function () {
 //获取当前登录态
 Vue.prototype.getLoginStatus = function () {
 
- return this.$axios
+  return this.$axios
     .get("/login/status")
-    // .then(res => {
-    //   // window.console.log("登录状态:", res.data);
-    //   if (res.data.code === 200) {
-    //     this.$store.commit("setloginStatus", true);
-    //   } else {
-    //     this.$store.commit("setloginStatus", false);
-    //   }
-    // })
-    // .catch(error => {
-    //   window.console.log("获取登录态失败！", error);
-    // });
+  // .then(res => {
+  //   // window.console.log("登录状态:", res.data);
+  //   if (res.data.code === 200) {
+  //     this.$store.commit("setloginStatus", true);
+  //   } else {
+  //     this.$store.commit("setloginStatus", false);
+  //   }
+  // })
+  // .catch(error => {
+  //   window.console.log("获取登录态失败！", error);
+  // });
 
 
 }
 
+// 获取音乐是否可以播放并获取相应的播放url
 Vue.prototype.getplayMusic = function (songinfoId, songinfo) {
   // 根据id查看是否有权限播放
   this.$axios.
@@ -85,18 +86,19 @@ Vue.prototype.getplayMusic = function (songinfoId, songinfo) {
             }
           })
           .then(res => {
+            // window.console.log("歌曲详情：", res);
             if (res.data.data[0].url != null) {
               this.$store.commit("setsongInfo", JSON.stringify(songinfo));
               this.$store.commit("setsongPlayUrl", res.data.data[0].url);
               this.$store.commit("setisPlay", true);
               window.console.log("歌曲详情：", res.data);
             } else {
-              this.$store.commit("setisPlay", false);
               Toast({
-                message: "亲爱的,暂无版权",
+                message: "亲爱的,暂无版权，已为你播放下一首",
                 position: "top",
                 duration: 3000
               });
+              this.nextSong(this.$store.getters.getserialNumber, this.$store.getters.getplaylist);
             }
 
           })
@@ -105,27 +107,73 @@ Vue.prototype.getplayMusic = function (songinfoId, songinfo) {
             window.console.log("歌曲URL获取失败！", error);
           });
       } else {
-        this.$store.commit("setisPlay", false);
         Toast({
-          message: res.data.message,
+          message: "亲爱的,暂无版权，已为你播放下一首",
           position: "top",
           duration: 3000
         });
+        this.nextSong(this.$store.getters.getserialNumber, this.$store.getters.getplaylist);
       }
     })
     .catch(error => {
-      this.$store.commit("setisPlay", false);
+      // this.$store.commit("setisPlay", false);
       Toast({
-        message: "亲爱的,暂无版权",
+        message: "亲爱的,暂无版权，已为你播放下一首",
         position: "top",
         duration: 3000
       });
+      this.nextSong(this.$store.getters.getserialNumber, this.$store.getters.getplaylist);
       window.console.log("歌曲URL获取失败！", error);
     });
 
 
 }
 
+// 下一首
+Vue.prototype.nextSong = function (number, songlist) {
+  // window.console.log("aa", this.$store.getters.getserialNumber)
+  // window.console.log(number, songlist);
+  if (songlist.length > 1 && number < songlist.length - 1) {
+    this.$store.commit("setserialNumber", number + 1);
+    if (!songlist[number + 1].picUrl) {
+      songlist[number + 1]["picUrl"] = songlist[number + 1].al.picUrl;
+    }
+    this.getplayMusic(songlist[number + 1].id ? songlist[number + 1].id : songlist[number + 1].resourceId, songlist[number + 1]);
+  } else {
+    this.$store.commit("setisPlay", false);
+    Toast({
+      message: "列表已播放完",
+      position: "center",
+      duration: 3000
+    });
+  }
+}
+
+// 上一首
+Vue.prototype.lastSong = function (number, songlist) {
+  if (songlist.length > 1 && number < songlist.length - 1 && number != 0) {
+    this.$store.commit("setserialNumber", number - 1);
+    songlist[number - 1]["picUrl"] = songlist[number - 1].al.picUrl;
+    this.getplayMusic(songlist[number - 1].id, songlist[number - 1]);
+  } else {
+    // this.$store.commit("setisPlay", false);
+    if (number == 0) {
+      Toast({
+        message: "这是第一首哦！",
+        position: "center",
+        duration: 3000
+      });
+    } else {
+      this.$store.commit("setisPlay", false);
+      Toast({
+        message: "列表已播放完",
+        position: "center",
+        duration: 3000
+      });
+    }
+
+  }
+}
 
 new Vue({
   router,

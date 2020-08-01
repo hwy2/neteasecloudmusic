@@ -53,11 +53,17 @@ fade {
                         color: #fff;
                         line-height: 42px;
                         justify-content: center;
+                        width: 540px;
+                        overflow-x: hidden;
 
                         p {
                             font-size: 30px;
                             font-weight: bold;
                             line-height: 42px;
+                            width: 90%;
+                            overflow: hidden; //隐藏文字
+                            text-overflow: ellipsis; //显示...
+                            white-space: nowrap; //不换行
                         }
                     }
                 }
@@ -78,7 +84,7 @@ fade {
         }
 
         .disc {
-            padding-top: 160px;
+            padding-top: 180px;
 
             .cantilever {
                 position: relative;
@@ -110,6 +116,7 @@ fade {
             .diskConater {
                 width: 100%;
                 overflow: hidden;
+
                 .disk {
                     width: 570px;
                     height: 570px;
@@ -143,8 +150,30 @@ fade {
 
         }
 
-        .lyric {
+        .lyric-conater {
             height: 180px;
+            overflow-y: auto;
+
+            .lyric-wrapper {
+                text-align: center;
+                padding: 25px 0;
+                .lyric {
+                    overflow: auto;
+
+                    p {
+                        font-size: 30px;
+                        line-height: 1.5;
+                        touch-action: pan-y;
+                    }
+
+                    .current {
+                        color: #fff;
+                        font-size: 35px;
+                    }
+                }
+
+
+            }
         }
 
         .operation {

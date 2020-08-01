@@ -45,7 +45,7 @@
               <div class="songsBar">
                 <div class="left" @click="playMusicAll()">
                   <i class="iconfont iconbofang-"></i>
-                  <span >播放全部</span>
+                  <span>播放全部</span>
                 </div>
                 <div class="right">
                   <i class="iconfont icongengduo1"></i>
@@ -94,7 +94,7 @@ export default {
     return {
       month: "",
       day: "",
-      backgroudURl: ""
+      backgroudURl: "",
     };
   },
   computed: {
@@ -106,20 +106,20 @@ export default {
       set(v) {
         // 使用vuex中的mutations中定义好的方法来改变
         this.$store.commit("setdailySongs", v);
-      }
-    }
+      },
+    },
   },
   methods: {
-    dialogClose: function() {
+    dialogClose: function () {
       this.$emit("close");
     },
-    getDailyMusic: function() {
+    getDailyMusic: function () {
       Indicator.open("加载中...");
       let that = this;
       // 获取每日推荐歌曲
       this.$axios
         .get("/recommend/songs")
-        .then(res => {
+        .then((res) => {
           // window.console.log("每日推荐", JSON.stringify(res.data));
           if (res.data.code === 200) {
             this.backgroudURl =
@@ -133,20 +133,21 @@ export default {
             Indicator.close();
           }
         })
-        .catch(error => {
+        .catch((error) => {
           window.console.log("每日推荐获取失败！/n" + error);
         });
     },
-    playMusic: function(songInfo) {
+    playMusic: function (songInfo) {
       songInfo["picUrl"] = songInfo.al.picUrl;
       this.getplayMusic(songInfo.id, songInfo);
     },
-    playMusicAll:function(){
+    playMusicAll: function () {
       let that = this;
-      that.$store.commit("setplaylist",that.dailySongs)
+      that.$store.commit("setplaylist", that.dailySongs);
+      that.$store.commit("setserialNumber", 0);
       let songlist = that.dailySongs;
       that.playMusic(songlist[0]);
-    }
+    },
   },
   created() {
     this.noScroll(); //禁止主页面滚动
@@ -160,7 +161,7 @@ export default {
       Toast({
         message: "请登录后再查看",
         position: "top",
-        duration: 3000
+        duration: 3000,
       });
       this.dialogClose();
     }
@@ -168,7 +169,7 @@ export default {
   destroyed() {
     //主页面可滑动
     this.canScroll();
-  }
+  },
 };
 </script>
 <style>
