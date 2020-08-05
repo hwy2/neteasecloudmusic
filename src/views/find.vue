@@ -30,7 +30,7 @@
           <p>{{personalizedList.uiElement.subTitle.title}}</p>
         </div>
         <div class="right">
-          <a href="javascript:void(0)">查看更多</a>
+          <a href="javascript:void(0)" @click="openSongsheetDialog('推荐')">查看更多</a>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
           <p>{{sceneList.uiElement.subTitle.title}}</p>
         </div>
         <div class="right">
-          <a href="javascript:void(0)">查看更多</a>
+          <a href="javascript:void(0)" @click="openSongsheetDialog('官方')">查看更多</a>
         </div>
       </div>
 
@@ -133,7 +133,7 @@
 
       <div class="concentration">
         <ul>
-          <li v-for="(item,index) in cloudVillage.extInfo.squareFeedViewDTOList" :key="index">
+          <li v-for="(item,index) in cloudVillage.extInfo.squareFeedViewDTOList" :key="index" @click="openCloudVillagedialog()">
             <img :src="item.resource.mlogBaseData.coverUrl" :alt="item.resource.mlogBaseData.text" />
             <p>{{item.resource.mlogBaseData.text}}</p>
           </li>
@@ -148,7 +148,14 @@
     <song-listdetails :songListId="songListId" @shut="closeSongListDialog" v-if="songListVisible"></song-listdetails>
 
     <!-- 歌单列表弹出层 -->
-    <song-sheet @shutdown="closeSongsheetDialog" v-if="songSheetVisible"></song-sheet>
+    <song-sheet
+      :songSheetType="songSheetType"
+      @shutdown="closeSongsheetDialog"
+      v-if="songSheetVisible"
+    ></song-sheet>
+
+    <!-- 歌单列表弹出层 -->
+    <cloud-villagedetails @CloudVillagedown="closeCloudVillagedialog" v-if="cloudVillageVisible"></cloud-villagedetails>
   </div>
 </template>
 
@@ -158,6 +165,7 @@ import { Indicator } from "mint-ui";
 import DailyRecommendation from "../components/recommendation";
 import SongListdetails from "../components/songListDetails";
 import SongSheet from "../components/songSheet";
+import CloudVillagedetails from "../components/cloudVillageDetails";
 
 export default {
   name: "find",
@@ -165,6 +173,7 @@ export default {
     DailyRecommendation,
     SongListdetails,
     SongSheet,
+    CloudVillagedetails,
   },
   data() {
     return {
@@ -180,6 +189,8 @@ export default {
       songSheetVisible: false, //歌单列表弹出层
       contentShow: false, //数据渲染前不显示
       day: "", //当前日期
+      songSheetType: "推荐", //默认打开歌单类型
+      cloudVillageVisible: false, //云村精选详情
     };
   },
   filters: {
@@ -196,7 +207,6 @@ export default {
   methods: {
     playMusic: function (songinfos, songinfospicUrl) {
       // 根据localStorage的歌曲id,获取详细歌曲的信息
-
       window.console.log(songinfos);
       let songId = songinfos.id ? songinfos.id : songinfos.resourceId;
       songinfos["picUrl"] = songinfospicUrl;
@@ -218,9 +228,10 @@ export default {
     closeSongListDialog: function () {
       this.songListVisible = false;
     },
-    openSongsheetDialog: function () {
+    openSongsheetDialog: function (type) {
       // dialog开关
       this.songSheetVisible = true;
+      this.songSheetType = type;
     },
     closeSongsheetDialog: function () {
       this.songSheetVisible = false;
@@ -264,7 +275,7 @@ export default {
           break;
 
         case 1:
-          this.openSongsheetDialog();
+          this.openSongsheetDialog("推荐");
           break;
       }
     },
@@ -276,16 +287,20 @@ export default {
         item.resources.forEach(function (i) {
           let images = i.uiElement.image.imageUrl;
           i.picUrl = images;
-          i.name = i.uiElement.mainTitle.title
+          i.name = i.uiElement.mainTitle.title;
           window.console.log(i);
           songAll.push(i);
         });
       });
-       window.console.log(songAll[0].picUrl);
-      songAll[0].picUrl =  that.newsongList.creatives[0].resources[0].uiElement.image.imageUrl;
       that.$store.commit("setplaylist", songAll);
       that.$store.commit("setserialNumber", 0);
-      that.playMusic(songAll[0]);
+      that.playMusic(songAll[0], songAll[0].picUrl);
+    },
+    closeCloudVillagedialog: function () {
+      this.cloudVillageVisible = false;
+    },
+    openCloudVillagedialog: function () {
+      this.cloudVillageVisible = true;
     },
   },
   created() {
@@ -293,12 +308,14 @@ export default {
     this.gethomedata(); //获取首页内容
     let data = new Date();
     this.day = data.getDate() <= 9 ? "0" + data.getDate() : data.getDate();
+    // 获取banner图
     this.$axios
       .get("/banner?type=2")
       .then((res) => {
         this.swipeList = res.data.banners;
         Indicator.close();
-        // this.getpersonalized();
+
+        // window.console.log(res.data.banners);
       })
       .catch((error) => {
         window.console.log("轮播图获取失败！/n" + error);

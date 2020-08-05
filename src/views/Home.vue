@@ -282,9 +282,13 @@ export default {
     popupVisible: function(newV) {
       if (newV) {
         this.noScroll(); //禁止主页面滚动
+        let styleLang= document.getElementById("playArea");
+        styleLang.style.zIndex = 2000;
       } else {
         //主页面可滑动
         this.canScroll();
+        let styleLang= document.getElementById("playArea");
+        styleLang.style.zIndex = 2002;
       }
     }
   },

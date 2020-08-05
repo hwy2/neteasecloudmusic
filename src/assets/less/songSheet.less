@@ -1,5 +1,5 @@
 .dialog-mask {
-    width: 750px !important;
+    width: 100% !important;
 
     .dialog-wrapper {
         .dialog-container {
@@ -9,7 +9,7 @@
                 height: 160px;
                 background-color: #d9d5d2;
                 position: fixed;
-                top: 0 ;
+                top: 0;
                 left: 0;
                 right: 0;
                 z-index: 2002;
@@ -19,10 +19,12 @@
                     padding: 18px 20px 0;
                     overflow: auto;
                     box-sizing: border-box;
+                    position: relative;
 
                     ul {
-                        width: 255%;
+                        width: 300%;
                         overflow-x: auto;
+                        overflow-y: hidden;
 
                         li {
                             float: left;
@@ -32,6 +34,9 @@
                             color: #545454;
                             text-align: center;
                             touch-action: pan-x;
+                            overflow: hidden; //隐藏文字
+                            text-overflow: ellipsis; //显示...
+                            white-space: nowrap; //不换行
                         }
 
                         li:last-child {
@@ -44,16 +49,32 @@
                         }
                     }
 
+                    .more {
+                        position: fixed;
+                        top: 100px;
+                        right: 0;
+                        height: 56px;
+                        width: 56px;
+                        text-align: center;
+                        line-height: 56px;
+                        background-color: #d9d5d2;
+
+                        i {
+                            font-size: 50px;
+                        }
+                    }
+
                 }
             }
 
             .sheet {
                 padding-top: 200px;
                 background-color: #d9d5d2;
+
                 ul {
                     padding: 0 12px 120px 29px;
                     overflow-y: auto;
-                    height: auto;
+                    height: 80vh;
                     touch-action: pan-y;
 
                     li {
@@ -61,7 +82,7 @@
                         margin-right: 20px;
                         float: left;
                         height: 300px;
-                        touch-action:pan-y;
+                        touch-action: pan-y;
                         margin-bottom: 20px;
                         position: relative;
 
@@ -69,7 +90,7 @@
                             width: 100%;
                         }
 
-                        span{
+                        span {
                             position: absolute;
                             top: 10px;
                             right: 12px;
@@ -87,6 +108,39 @@
                             display: -webkit-box;
 
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    .categories-warp {
+        background-color: #fff;
+        width: 600px;
+        height: 101vh;
+        padding: 100px 20px;
+        overflow-y: auto;
+
+        .bigcategories {
+            padding-bottom: 150px;
+
+            li {
+                padding-top: 50px;
+                font-size: 25px;
+
+                .smallcategories{
+                    padding: 30px 0 0;
+                    li{
+                        padding-top: 0;
+                        float: left;
+                        width: 30%;
+                        height: 60px;
+                        background-color: rgb(243, 243, 243);
+                        border-radius: 10px;
+                        text-align: center;
+                        line-height: 60px;
+                        margin-right: 3%;
+                        margin-bottom: 3%;
                     }
                 }
             }

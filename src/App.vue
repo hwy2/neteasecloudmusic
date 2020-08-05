@@ -3,7 +3,7 @@
     <router-view />
 
     <!-- 底部播放区 -->
-    <div class="tabbar clearfix">
+    <div class="tabbar clearfix" id="playArea">
       <div class="left clearfix" @click="openPanelDialog()">
         <div class="musicImg">
           <span>
@@ -201,7 +201,7 @@ export default {
       this.$axios
         .get("/song/url", {
           params: {
-            id: this.song["song"].id,
+            id: this.song.id,
           },
         })
         .then((res) => {
@@ -305,7 +305,7 @@ export default {
     res.then(
       (data) => {
         //执行代码逻辑
-        window.console.log("登录状态:", data.data);
+        // window.console.log("登录状态:", data.data);
         this.$store.commit("setloginStatus", data.data.code);
       },
       (err) => {

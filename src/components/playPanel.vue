@@ -157,6 +157,12 @@ export default {
         this.currentLyric.stop();
       }
     },
+    songInfo:function(){
+      if(this.playingLyric){
+        this.playingLyric.stop();
+      }
+
+    }
   },
   methods: {
     panelClose: function () {
@@ -224,6 +230,7 @@ export default {
     },
     playnext: function () {
       this.nextSong(this.serialNumber, this.playlist);
+      this.getlyric();
     },
     playlast: function () {
       this.lastSong(this.serialNumber, this.playlist);
