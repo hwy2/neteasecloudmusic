@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/neteasecloudmusic/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
   lintOnSave: true,
   css: {
     loaderOptions: {
@@ -14,4 +14,12 @@ module.exports = {
       }
     }
   },
+  //修改或新增html-webpack-plugin的值，在index.html里面能读取htmlWebpackPlugin.options.title
+  chainWebpack: config => {
+    config.plugin('html')
+      .tap(args => {
+        args[0].title = "网抑云音乐";
+        return args;
+      })
+  }
 }

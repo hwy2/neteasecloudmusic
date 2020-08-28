@@ -35,6 +35,7 @@
               :bottom-all-loaded="allLoaded"
               :auto-fill="false"
               ref="loadmore"
+              id="loadmore"
             >
               <ul class="clearfix">
                 <li
@@ -59,7 +60,7 @@
     <!-- 歌单详情弹出层 -->
     <song-listdetails :songListId="songListId" @shut="closeSongListDialog" v-if="songListVisible"></song-listdetails>
 
-    <!-- 登录层 -->
+    <!-- 歌单分类 -->
     <mt-popup
       class="categories"
       v-model="popupSongVisible"

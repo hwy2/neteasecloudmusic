@@ -236,23 +236,28 @@
         <mt-tab-item id="videoY">视频</mt-tab-item>
       </mt-navbar>
       <div class="search">
-        <i class="iconfont iconsousuo"></i>
+        <i class="iconfont iconsousuo" @click="openSearchdialog()"></i>
       </div>
     </div>
     <router-view />
+
+    <!-- 歌单列表弹出层 -->
+    <search @searchdown="closeSearchdialog" v-if="searchVisible"></search>
   </div>
 </template>
 
 <script>
 import "../assets/less/home.less";
+import Search from "../components/search";
 
 export default {
   name: "Home",
-  components: {},
+  components: { Search },
   data() {
     return {
       popupVisible: false,
-      selected: "find"
+      selected: "find", //导航栏选中
+      searchVisible: false, //搜索页
     };
   },
   computed: {
@@ -264,34 +269,40 @@ export default {
       set(v) {
         // 使用vuex中的mutations中定义好的方法来改变
         this.$store.commit("setprofile", v);
-      }
-    }
+      },
+    },
   },
   methods: {
-    ListenDrawer: function() {
+    ListenDrawer: function () {
       this.popupVisible = true;
-    }
+    },
+    closeSearchdialog: function () {
+      this.searchVisible = false;
+    },
+    openSearchdialog: function () {
+      this.searchVisible = true;
+    },
   },
   watch: {
-    selected: function(newV, oldV) {
+    selected: function (newV, oldV) {
       window.console.log("当前选择：" + newV);
       window.console.log("上一个选择：" + oldV);
       this.$router.push({ name: newV });
       // this.$store.commit("setSelected", newV);
     },
-    popupVisible: function(newV) {
+    popupVisible: function (newV) {
       if (newV) {
         this.noScroll(); //禁止主页面滚动
-        let styleLang= document.getElementById("playArea");
+        let styleLang = document.getElementById("playArea");
         styleLang.style.zIndex = 2000;
       } else {
         //主页面可滑动
         this.canScroll();
-        let styleLang= document.getElementById("playArea");
+        let styleLang = document.getElementById("playArea");
         styleLang.style.zIndex = 2002;
       }
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>

@@ -185,7 +185,8 @@ export default {
         })
         .then((res) => {
           // window.console.log("播放记录", JSON.stringify(res));
-          res.data.weekData[res.data.weekData.length - 1].song["picUrl"]=res.data.weekData[res.data.weekData.length - 1].song.al.picUrl
+          res.data.weekData[res.data.weekData.length - 1].song["picUrl"] =
+            res.data.weekData[res.data.weekData.length - 1].song.al.picUrl;
           that.$store.commit(
             "setsongInfo",
             JSON.stringify(res.data.weekData[res.data.weekData.length - 1].song)
@@ -289,10 +290,10 @@ export default {
       if (that.loginStatus) {
         that.popupVisible = false;
         that.canScroll(); //主页面可滑动
-        that.getnewsong(); //获取新歌推荐
+        that.getnewsong(); //获取用户记录
         // that.gethomedata();//获取首页-发现内容
       } else {
-        that.popupVisible = true;
+        // that.popupVisible = true;
         that.noScroll(); //禁止主页面滚动
       }
     }, 800);
@@ -313,7 +314,11 @@ export default {
       }
     );
 
-    this.$store.commit("setprofile", localStorage.getItem("profile")); //获取localStorage里的登录信息
+    if (localStorage.getItem("profile")) {
+      this.$store.commit("setprofile", localStorage.getItem("profile")); //获取localStorage里的登录信息
+    } else {
+      this.$store.commit("setloginStatus", false);
+    }
   },
 };
 </script>

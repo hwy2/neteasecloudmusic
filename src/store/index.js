@@ -10,12 +10,15 @@ export default new Vuex.Store({
     songPlayUrl: '', //音乐播放链接
     cookie: '', //登录信息
     account: '', //登录信息
-    profile: [], //登录，返回的用户信息
+    profile: {
+      nickname: "H",
+      avatarUrl: "../img/backgroud.jpg"
+    }, //登录，返回的用户信息
     dailySongs: [], //每日推荐音乐
     loginStatus: false, // 登录状态
     playlist: [], //播放列表
     serialNumber: 0, //播放列表序号
-    musicSize :0
+    musicSize: 0
   },
   getters: {
     getisPlay(state) {

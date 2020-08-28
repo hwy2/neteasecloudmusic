@@ -156,6 +156,7 @@
 
     <!-- 歌单列表弹出层 -->
     <cloud-villagedetails @CloudVillagedown="closeCloudVillagedialog" v-if="cloudVillageVisible"></cloud-villagedetails>
+
   </div>
 </template>
 
@@ -261,7 +262,7 @@ export default {
         url: "/homepage/dragon/ball",
       })
         .then((res) => {
-          // window.console.log("圆形图标入口列表", res.data);
+          window.console.log("圆形图标入口列表", res);
           this.iconList = res.data.data;
         })
         .catch((err) => {
